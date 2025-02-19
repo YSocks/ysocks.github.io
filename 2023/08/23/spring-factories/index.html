@@ -1,0 +1,668 @@
+<!DOCTYPE html><html lang="zh-CN" data-default-color-scheme="auto"><head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="YSocket">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="引言在java spring cloud项目中，我们常常会在子模块中创建公共方法，那么在另外一个子模块中，需要加载配置文件的时候，往往Spring Boot 自动扫描包的时候，只会扫描自己模块下的类。这个是springboot约定俗成的内容。 抛出问题如果想要被Spring容器管理的Bean的路径不再Spring Boot 的包扫描路径下，怎么办呢？也就是如何去加载第三方的Bean 呢？ 目前较通">
+<meta property="og:type" content="article">
+<meta property="og:title" content="springboot核心基础之spring.factories机制">
+<meta property="og:url" content="http://ysocks.gitee.io/2023/08/23/spring-factories/index.html">
+<meta property="og:site_name" content="YSocket's Blog">
+<meta property="og:description" content="引言在java spring cloud项目中，我们常常会在子模块中创建公共方法，那么在另外一个子模块中，需要加载配置文件的时候，往往Spring Boot 自动扫描包的时候，只会扫描自己模块下的类。这个是springboot约定俗成的内容。 抛出问题如果想要被Spring容器管理的Bean的路径不再Spring Boot 的包扫描路径下，怎么办呢？也就是如何去加载第三方的Bean 呢？ 目前较通">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://ysocks.gitee.io/images/pasted-23.png">
+<meta property="og:image" content="http://ysocks.gitee.io/images/pasted-24.png">
+<meta property="og:image" content="http://ysocks.gitee.io/images/pasted-25.png">
+<meta property="og:image" content="http://ysocks.gitee.io/images/pasted-26.png">
+<meta property="article:published_time" content="2023-08-23T02:33:33.000Z">
+<meta property="article:modified_time" content="2023-08-24T13:16:16.643Z">
+<meta property="article:author" content="YSocket">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://ysocks.gitee.io/images/pasted-23.png">
+  
+  
+  
+  <title>springboot核心基础之spring.factories机制 - YSocket's Blog</title>
+
+  <link rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css">
+
+
+
+  <link rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css">
+
+  <link rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css">
+
+  <link rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css">
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css">
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css">
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"ysocks.gitee.io","root":"/","version":"1.9.5-a","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"gtag":null},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script src="/js/utils.js"></script>
+  <script src="/js/color-schema.js"></script>
+  
+
+
+  
+<!-- hexo injector head_end start --><style>
+body hanla:after {
+    content: ' ';
+    display: inline;
+    font-family: inherit;
+    font-size: 0.45em;
+}
+
+html code hanla,
+html pre hanla,
+html kbd hanla,
+html samp hanla,
+html ruby hanla,
+html .tag-list-item hanla {
+    display: none;
+}
+
+html ol > hanla,
+html ul > hanla {
+    display: none;
+}
+</style><!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="YSocket's Blog" type="application/atom+xml">
+</head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>YSocket's blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span><hanla></hanla>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax="true" style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="springboot核心基础之spring.factories机制"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-08-23 10:33" pubdate="">
+          2023<hanla></hanla>年<hanla></hanla>8<hanla></hanla>月<hanla></hanla>23<hanla></hanla>日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          5.4k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          45 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">springboot<hanla></hanla>核心基础之<hanla></hanla>spring.factories<hanla></hanla>机制</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h4 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h4><p>在<hanla></hanla>java spring cloud<hanla></hanla>项目中，我们常常会在子模块中创建公共方法，那么在另外一个子模块中，需要加载配置文件的时候，往往<hanla></hanla>Spring Boot 自动扫描包的时候，只会扫描自己模块下的类。这个是<hanla></hanla>springboot<hanla></hanla>约定俗成的内容。</p>
+<h4 id="抛出问题"><a href="#抛出问题" class="headerlink" title="抛出问题"></a>抛出问题</h4><p>如果想要被<hanla></hanla>Spring<hanla></hanla>容器管理的<hanla></hanla>Bean<hanla></hanla>的路径不再<hanla></hanla>Spring Boot 的包扫描路径下，怎么办呢？也就是如何去加载第三方的<hanla></hanla>Bean 呢？</p>
+<p>目前较通用的方式有<hanla></hanla>2<hanla></hanla>种，一是使用注解进行实例化，而是使用<hanla></hanla>spring.factories<hanla></hanla>机制。</p>
+<p>这里我们使用<hanla></hanla>Swagger<hanla></hanla>的配置来做实验。</p>
+<p>　首先一个<hanla></hanla>Swagger<hanla></hanla>的配置类：SwaggerConfig，工程结构如下：</p>
+<p><img src="/images/pasted-23.png" srcset="/img/loading.gif" lazyload alt="upload successful"></p>
+<p>发现我的<hanla></hanla>SwaggerConfig 类和 SpringBoot 的启动类<hanla></hanla>ConfigApplication.java 不在同一级目录下，按照<hanla></hanla>springboot<hanla></hanla>启动机制，以当<hanla></hanla>Spring Boot 自动扫描包的时候，是扫描不到我的<hanla></hanla>SwaggerConfig 的配置的，也就在控制台没有<hanla></hanla>Swagger<hanla></hanla>的打印的信息：</p>
+<p><img src="/images/pasted-24.png" srcset="/img/loading.gif" lazyload alt="upload successful"></p>
+<p>所以这时候我如果想要把<hanla></hanla>SwaggerConfig 加载到<hanla></hanla>Spring<hanla></hanla>容器中的话 要怎么办呢？下面介绍上面提到的<hanla></hanla>2<hanla></hanla>种方式:</p>
+<h5 id="方法解决"><a href="#方法解决" class="headerlink" title="方法解决"></a>方法解决</h5><ul>
+<li>方法一：在<hanla></hanla>Spring Boot Application 主类上使用<hanla></hanla>@Import<hanla></hanla>注解。</li>
+</ul>
+<p><img src="/images/pasted-25.png" srcset="/img/loading.gif" lazyload alt="upload successful"></p>
+<ul>
+<li>方法二：创建<hanla></hanla>spring.factories<hanla></hanla>文件<br>现在我们将其改造一下，采用<hanla></hanla>spring.factories 的方式去加载<hanla></hanla>SwaggerConfig<hanla></hanla>类，在<hanla></hanla>resources<hanla></hanla>目录下新建一个<hanla></hanla>META-INF 的目录，然后在</li>
+</ul>
+<p>新建一个<hanla></hanla>spring.factories 的文件，里面的内容为：</p>
+<figure class="highlight xml"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs xml"># Auto Configure<br>org.springframework.boot.autoconfigure.EnableAutoConfiguration=\<br>com.sg.config.Swagger2Config<br></code></pre></td></tr></tbody></table></figure>
+<p>然后在把<hanla></hanla>Spring Boot 启动类上的<hanla></hanla>@Import<hanla></hanla>注释掉，启动发现也可以把<hanla></hanla>SwaggerConfig<hanla></hanla>加载到<hanla></hanla>Spring 容器中。</p>
+<p>到这就完成了加载一个<hanla></hanla>Spring 不能扫描到的一个类，他可以是第三方的，也可以是自己写的，只要是<hanla></hanla>Spring Boot 默认扫描路径不能够扫描到，都可以使用这种方式去加载。</p>
+<h4 id="内部原理机制"><a href="#内部原理机制" class="headerlink" title="内部原理机制"></a>内部原理机制<hanla></hanla></h4><p>Spring.Factories<hanla></hanla>这种机制实际上是仿照<hanla></hanla>java<hanla></hanla>中的<hanla></hanla>SPI<hanla></hanla>扩展机制实现的。</p>
+<h4 id="什么是SPI-机制"><a href="#什么是SPI-机制" class="headerlink" title="什么是SPI 机制"></a>什么是<hanla></hanla>SPI 机制<hanla></hanla></h4><p>SPI 的全名为 Service Provider Interface.<hanla></hanla>这个是是针对厂商或者插件的。在<hanla></hanla>java.util.ServiceLoader 的文档里有比较详细的介绍。</p>
+<p>简单总结下<hanla></hanla>Java SPI<hanla></hanla>机制的思想。我们系统里抽象的各个模块，往往有很多不同的实现方案，比如 日志模块的方案，xml<hanla></hanla>解析模块、jdbc<hanla></hanla>模块的方案等。面向的对象设计里，我们一般推荐模块之间基于接口编程，模块之间不对实现类进行硬编码。一旦代码里涉及了具体的实现类，就违反了可插拔的原则，如果需要替换一种实现，就需要修改代码。为了实现在模块装配的时候能不在程序里动态指明，这就需要一种服务发现机制。</p>
+<p>Java SPI 就是提供这样的一种机制：为某个接口寻找服务的实现的机制，有点类似<hanla></hanla>IOC<hanla></hanla>的思想，就是将装配的控制权移到程序之外，在模块化设计中这个机制很重要。</p>
+<h4 id="Spring-Boot-中的SPI-机制"><a href="#Spring-Boot-中的SPI-机制" class="headerlink" title="Spring Boot 中的SPI 机制"></a>Spring Boot 中的<hanla></hanla>SPI 机制</h4><p>在<hanla></hanla>Spring boot 中也有一种类似的加载机制，它在<hanla></hanla><br>META-INFO/spring.factories<hanla></hanla>文件中配置接口的实现类名称，然后在程序中读取这些配置文件并实例化。</p>
+<p>这种自定义的<hanla></hanla>SPI 机制就是<hanla></hanla>Spring Boot Starter 实现的基础。</p>
+<h4 id="Spring-Factories实现原理"><a href="#Spring-Factories实现原理" class="headerlink" title="Spring Factories实现原理"></a>Spring Factories<hanla></hanla>实现原理<hanla></hanla></h4><p>spring -core 包里定义了<hanla></hanla>SpringFactoriesLoader 类，这个类实现了检索<hanla></hanla>META-INF/spring.factories<hanla></hanla>文件，并获取指定接口的配置的功能。在这个类中定义了两个对外的方法：</p>
+<p>loadFactories 根据接口类获取其实现类的实例，这个方法返回的是对象列表<hanla></hanla><br>loadFactoryNames 根据接口获取其接口类的名称，这个方法返回的是类名的列表。<br>上面两个方法的关键都是从指定的<hanla></hanla>ClassLoader<hanla></hanla>中获取<hanla></hanla>spring.factories<hanla></hanla>文件，并解析得到类名列表，具体代码如下：</p>
+<p><img src="/images/pasted-26.png" srcset="/img/loading.gif" lazyload alt="upload successful"><br>从代码中可以看到，在这个方法中会遍历整个<hanla></hanla>ClassLoader 中所有<hanla></hanla>Jar<hanla></hanla>包下的<hanla></hanla>spring.factories<hanla></hanla>文件，也就是我们可以在自己<hanla></hanla>jar<hanla></hanla>中配置<hanla></hanla>spring.factories<hanla></hanla>文件，不会影响到其他地方的配置，也不回被别人的配置覆盖。</p>
+<p>spring.factories<hanla></hanla>的是通过<hanla></hanla>Properties<hanla></hanla>解析得到的，所以我们在写文件中的内容都是按照下面这种方式配置的。</p>
+<figure class="highlight xml"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs xml"># Auto Configure<br>org.springframework.boot.autoconfigure.EnableAutoConfiguration=\<br>com.sg.config.Swagger2Config<br></code></pre></td></tr></tbody></table></figure>
+<p>如果一个接口希望配置多个实现类，可以用”,”<hanla></hanla>分割。</p>
+<h4 id="spring-boot包中的spring-factories文件"><a href="#spring-boot包中的spring-factories文件" class="headerlink" title="spring-boot包中的spring.factories文件"></a>spring-boot<hanla></hanla>包中的<hanla></hanla>spring.factories<hanla></hanla>文件<hanla></hanla></h4><p>spring-boot<hanla></hanla>包中的<hanla></hanla>spring.factories<hanla></hanla>文件</p>
+<figure class="highlight mipsasm"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><code class="hljs mipsasm"><span class="hljs-comment"># PropertySource Loaders</span><br><span class="hljs-keyword">org.springframework.boot.env.PropertySourceLoader=\</span><br><span class="hljs-keyword"></span><span class="hljs-keyword">org.springframework.boot.env.PropertiesPropertySourceLoader,\</span><br><span class="hljs-keyword"></span><span class="hljs-keyword">org.springframework.boot.env.YamlPropertySourceLoader</span><br><span class="hljs-keyword"></span><br><br><span class="hljs-comment"># Run Listeners</span><br><span class="hljs-keyword">org.springframework.boot.SpringApplicationRunListener=\</span><br><span class="hljs-keyword"></span><span class="hljs-keyword">org.springframework.boot.context.event.EventPublishingRunListener</span><br><span class="hljs-keyword"></span><br><br><span class="hljs-comment"># Error Reporters</span><br><span class="hljs-keyword">org.springframework.boot.SpringBootExceptionReporter=\</span><br><span class="hljs-keyword"></span><span class="hljs-keyword">org.springframework.boot.diagnostics.FailureAnalyzers</span><br><span class="hljs-keyword"></span><br><br><span class="hljs-comment"># Application Context Initializers</span><br><span class="hljs-keyword">org.springframework.context.ApplicationContextInitializer=\</span><br><span class="hljs-keyword"></span><span class="hljs-keyword">org.springframework.boot.context.ConfigurationWarningsApplicationContextInitializer,\</span><br><span class="hljs-keyword"></span><span class="hljs-keyword">org.springframework.boot.context.ContextIdApplicationContextInitializer,\</span><br><span class="hljs-keyword"></span><span class="hljs-keyword">org.springframework.boot.context.config.DelegatingApplicationContextInitializer,\</span><br><span class="hljs-keyword"></span><span class="hljs-keyword">org.springframework.boot.web.context.ServerPortInfoApplicationContextInitializer</span><br><span class="hljs-keyword"></span><br><br><span class="hljs-comment"># Application Listeners</span><br><span class="hljs-keyword">org.springframework.context.ApplicationListener=\</span><br><span class="hljs-keyword"></span><span class="hljs-keyword">org.springframework.boot.ClearCachesApplicationListener,\</span><br><span class="hljs-keyword"></span><span class="hljs-keyword">org.springframework.boot.builder.ParentContextCloserApplicationListener,\</span><br><span class="hljs-keyword"></span><span class="hljs-keyword">org.springframework.boot.context.FileEncodingApplicationListener,\</span><br><span class="hljs-keyword"></span><span class="hljs-keyword">org.springframework.boot.context.config.AnsiOutputApplicationListener,\</span><br><span class="hljs-keyword"></span><span class="hljs-keyword">org.springframework.boot.context.config.ConfigFileApplicationListener,\</span><br><span class="hljs-keyword"></span><span class="hljs-keyword">org.springframework.boot.context.config.DelegatingApplicationListener,\</span><br><span class="hljs-keyword"></span><span class="hljs-keyword">org.springframework.boot.context.logging.ClasspathLoggingApplicationListener,\</span><br><span class="hljs-keyword"></span><span class="hljs-keyword">org.springframework.boot.context.logging.LoggingApplicationListener,\</span><br><span class="hljs-keyword"></span><span class="hljs-keyword">org.springframework.boot.liquibase.LiquibaseServiceLocatorApplicationListener</span><br><span class="hljs-keyword"></span><br><br><span class="hljs-comment"># Environment Post Processors</span><br><span class="hljs-keyword">org.springframework.boot.env.EnvironmentPostProcessor=\</span><br><span class="hljs-keyword"></span><span class="hljs-keyword">org.springframework.boot.cloud.CloudFoundryVcapEnvironmentPostProcessor,\</span><br><span class="hljs-keyword"></span><span class="hljs-keyword">org.springframework.boot.env.SpringApplicationJsonEnvironmentPostProcessor,\</span><br><span class="hljs-keyword"></span><span class="hljs-keyword">org.springframework.boot.env.SystemEnvironmentPropertySourceEnvironmentPostProcessor</span><br><span class="hljs-keyword"></span><br><br><span class="hljs-comment"># Failure Analyzers</span><br><span class="hljs-keyword">org.springframework.boot.diagnostics.FailureAnalyzer=\</span><br><span class="hljs-keyword"></span><span class="hljs-keyword">org.springframework.boot.diagnostics.analyzer.BeanCurrentlyInCreationFailureAnalyzer,\</span><br><span class="hljs-keyword"></span><span class="hljs-keyword">org.springframework.boot.diagnostics.analyzer.BeanNotOfRequiredTypeFailureAnalyzer,\</span><br><span class="hljs-keyword"></span><span class="hljs-keyword">org.springframework.boot.diagnostics.analyzer.BindFailureAnalyzer,\</span><br><span class="hljs-keyword"></span><span class="hljs-keyword">org.springframework.boot.diagnostics.analyzer.BindValidationFailureAnalyzer,\</span><br><span class="hljs-keyword"></span><span class="hljs-keyword">org.springframework.boot.diagnostics.analyzer.UnboundConfigurationPropertyFailureAnalyzer,\</span><br><span class="hljs-keyword"></span><span class="hljs-keyword">org.springframework.boot.diagnostics.analyzer.ConnectorStartFailureAnalyzer,\</span><br><span class="hljs-keyword"></span><span class="hljs-keyword">org.springframework.boot.diagnostics.analyzer.NoUniqueBeanDefinitionFailureAnalyzer,\</span><br><span class="hljs-keyword"></span><span class="hljs-keyword">org.springframework.boot.diagnostics.analyzer.PortInUseFailureAnalyzer,\</span><br><span class="hljs-keyword"></span><span class="hljs-keyword">org.springframework.boot.diagnostics.analyzer.ValidationExceptionFailureAnalyzer,\</span><br><span class="hljs-keyword"></span><span class="hljs-keyword">org.springframework.boot.diagnostics.analyzer.InvalidConfigurationPropertyNameFailureAnalyzer,\</span><br><span class="hljs-keyword"></span><span class="hljs-keyword">org.springframework.boot.diagnostics.analyzer.InvalidConfigurationPropertyValueFailureAnalyzer</span><br><span class="hljs-keyword"></span><br><br><span class="hljs-comment"># FailureAnalysisReporters</span><br><span class="hljs-keyword">org.springframework.boot.diagnostics.FailureAnalysisReporter=\</span><br><span class="hljs-keyword"></span><span class="hljs-keyword">org.springframework.boot.diagnostics.LoggingFailureAnalysisReporter</span><br></code></pre></td></tr></tbody></table></figure>
+<p>在日常工作中，我们可能需要实现一些<hanla></hanla>SDK 或者<hanla></hanla>Sring boot starter 给别人用的时候，我们就可以使用<hanla></hanla>Factories<hanla></hanla>机制，Factories<hanla></hanla>机制可以让<hanla></hanla>SDK<hanla></hanla>或者<hanla></hanla>Stater<hanla></hanla>的使用只需要很少或者不需要进行配置，只需要在服务中引入我们的<hanla></hanla>Jar<hanla></hanla>包就即可。</p>
+
+                
+              </div>
+            
+            <hr>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>springboot<hanla></hanla>核心基础之<hanla></hanla>spring.factories<hanla></hanla>机制<hanla></hanla></div>
+      <div>http://ysocks.gitee.io/2023/08/23/spring-factories/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div><hanla></hanla>作者<hanla></hanla></div>
+          <div>YSocket</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div><hanla></hanla>发布于<hanla></hanla></div>
+          <div>2023<hanla></hanla>年<hanla></hanla>8<hanla></hanla>月<hanla></hanla>23<hanla></hanla>日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议<hanla></hanla></div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/09/02/mybatis-plus-null-field-not-be-update/" title="MyBatis-Plus updateById 不更新null字段">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">MyBatis-Plus updateById 不更新<hanla></hanla>null<hanla></hanla>字段</span>
+                        <span class="visible-mobile">上一篇<hanla></hanla></span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/08/04/find-unused-by-idea/" title="idea使用技巧之检查未使用的类、变量、方法">
+                        <span class="hidden-mobile">idea<hanla></hanla>使用技巧之检查未使用的类、变量、方法</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索<hanla></hanla></h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input"><hanla></hanla>关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js"></script>
+  <link rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css">
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js"></script>
+<script src="/js/events.js"></script>
+<script src="/js/plugins.js"></script>
+
+
+  <script src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js"></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script src="/js/img-lazyload.js"></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src="https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js"></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script src="/js/local-search.js"></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script src="/js/boot.js"></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning"><hanla></hanla>博客在允许 JavaScript 运行的环境下浏览效果更佳<hanla></hanla></div>
+  </noscript>
+
+
+</body></html>

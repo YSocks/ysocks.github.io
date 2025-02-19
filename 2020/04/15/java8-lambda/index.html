@@ -1,0 +1,764 @@
+<!DOCTYPE html><html lang="zh-CN" data-default-color-scheme="auto"><head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="YSocket">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Java8中最重要的特性之一就是引入了lambda表达式。这能够使你的代码更加简练，并允许你将行为传递到各处。一段时间以来，Java因为自身的冗长和缺少函数式编程的能力而受到批评。随着函数式编程变得越来越流行和有价值，Java也在努力接受函数式编程。否则，Java将会变得没有价值。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java8-lambda">
+<meta property="og:url" content="http://ysocks.gitee.io/2020/04/15/java8-lambda/index.html">
+<meta property="og:site_name" content="YSocket's Blog">
+<meta property="og:description" content="Java8中最重要的特性之一就是引入了lambda表达式。这能够使你的代码更加简练，并允许你将行为传递到各处。一段时间以来，Java因为自身的冗长和缺少函数式编程的能力而受到批评。随着函数式编程变得越来越流行和有价值，Java也在努力接受函数式编程。否则，Java将会变得没有价值。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-04-15T02:41:00.000Z">
+<meta property="article:modified_time" content="2022-01-29T01:42:46.272Z">
+<meta property="article:author" content="YSocket">
+<meta property="article:tag" content="java">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>Java8-lambda - YSocket's Blog</title>
+
+  <link rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css">
+
+
+
+  <link rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css">
+
+  <link rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css">
+
+  <link rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css">
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css">
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css">
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"ysocks.gitee.io","root":"/","version":"1.9.5-a","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"gtag":null},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script src="/js/utils.js"></script>
+  <script src="/js/color-schema.js"></script>
+  
+
+
+  
+<!-- hexo injector head_end start --><style>
+body hanla:after {
+    content: ' ';
+    display: inline;
+    font-family: inherit;
+    font-size: 0.45em;
+}
+
+html code hanla,
+html pre hanla,
+html kbd hanla,
+html samp hanla,
+html ruby hanla,
+html .tag-list-item hanla {
+    display: none;
+}
+
+html ol > hanla,
+html ul > hanla {
+    display: none;
+}
+</style><!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="YSocket's Blog" type="application/atom+xml">
+</head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>YSocket's blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span><hanla></hanla>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax="true" style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Java8-lambda"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2020-04-15 10:41" pubdate="">
+          2020<hanla></hanla>年<hanla></hanla>4<hanla></hanla>月<hanla></hanla>15<hanla></hanla>日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          11k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          96 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">Java8-lambda</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>Java8<hanla></hanla>中最重要的特性之一就是引入了<hanla></hanla>lambda<hanla></hanla>表达式。这能够使你的代码更加简练，并允许你将行为传递到各处。一段时间以来，Java<hanla></hanla>因为自身的冗长和缺少函数式编程的能力而受到批评。随着函数式编程变得越来越流行和有价值，Java<hanla></hanla>也在努力接受函数式编程。否则，Java<hanla></hanla>将会变得没有价值。</p>
+<span id="more"></span>
+<p>Java8<hanla></hanla>在使世界上最受欢迎的编程语言之一在接纳函数式编程的过程中向前迈了一大步。为了支持函数式编程，编程语言必须将函数作为<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E7%AC%AC%E4%B8%80%E9%A1%9E%E7%89%A9%E4%BB%B6">第一类对象</a>。在<hanla></hanla>Java8<hanla></hanla>之前，如果没有使用一个匿名内部类模板是没法写出清晰的函数式代码的。随着<hanla></hanla>lambda<hanla></hanla>表达式的引入，函数已经成为第一类对象，并能够像其它变量一样被到处传递。</p>
+<p>lambda<hanla></hanla>表达式允许你定义一个不与标识符绑定的匿名函数。你可以像编程语言中的其它概念一样使用它们，比如变量的声明。当一个编程语言需要支持高阶函数时，就需要用到<hanla></hanla>lambda<hanla></hanla>表达式。高阶函数是指以其它函数作为参数或者返回函数作为结果的函数。</p>
+<blockquote>
+<p>这一节的代码在<hanla></hanla><a target="_blank" rel="noopener" href="https://github.com/shekhargulati/java8-the-missing-tutorial/tree/master/code/src/main/java/com/shekhargulati/java8_tutorial/ch02">ch02</a><hanla></hanla>包中</p>
+</blockquote>
+<p>现在，随着在<hanla></hanla>Java8<hanla></hanla>中引进了<hanla></hanla>lambda<hanla></hanla>表达式，Java<hanla></hanla>已经支持高阶函数。让我来看一个<hanla></hanla>lambda<hanla></hanla>表达式的典型例子——<code>Collections</code><hanla></hanla>类中的<hanla></hanla><code>sort</code><hanla></hanla>方法。<code>sort</code><hanla></hanla>方法有两种变体——一种以一个<hanla></hanla><code>List</code><hanla></hanla>作为参数，另一个以<hanla></hanla><code>List</code><hanla></hanla>和<hanla></hanla><code>Comparator</code><hanla></hanla>作为参数。如下面的代码块所示，第二种<hanla></hanla><code>sort</code><hanla></hanla>方法是一个接受<hanla></hanla>lambda<hanla></hanla>表达式的高阶函数的例子。</p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs java">List&lt;String&gt; names = Arrays.asList(<span class="hljs-string">"shekhar"</span>, <span class="hljs-string">"rahul"</span>, <span class="hljs-string">"sameer"</span>);<br>Collections.sort(names, (first, second) -&gt; first.length() - second.length());<br></code></pre></td></tr></tbody></table></figure>
+
+<p>上面的代码将姓名链表按照元素的长度进行排序。该程序的输出如下所示。</p>
+<figure class="highlight angelscript"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs angelscript"><span class="hljs-string">[rahul, sameer, shekhar]</span><br></code></pre></td></tr></tbody></table></figure>
+
+<p><hanla></hanla>上面代码块中的表达式<hanla></hanla><code>(first, second) -&gt; first.length() - second.length()</code><hanla></hanla>是一个<hanla></hanla><code>Comparator&lt;String&gt;</code><hanla></hanla>类型的<hanla></hanla>lambda<hanla></hanla>表达式。</p>
+<ul>
+<li><code>(first, second)</code><hanla></hanla>是比较器<hanla></hanla><code>Comparator</code><hanla></hanla>的<hanla></hanla><code>compare</code><hanla></hanla>方法。</li>
+<li><code>first.length() - second.length()</code> 是用来比较两个名字长度的方法实体。</li>
+<li><code>-&gt;</code><hanla></hanla>是<hanla></hanla>lambda<hanla></hanla>操作符，用来将参数和方法体分离开。</li>
+</ul>
+<p>在我们继续深挖<hanla></hanla>Java8<hanla></hanla>的<hanla></hanla>lambda<hanla></hanla>表达式之前，让我们来看看<hanla></hanla>lambda<hanla></hanla>的历史来理解为什么会存在<hanla></hanla>lambda。</p>
+<h2 id="lambda的历史"><a href="#lambda的历史" class="headerlink" title="lambda的历史"></a>lambda<hanla></hanla>的历史<hanla></hanla></h2><p>lambda<hanla></hanla>表达式源自λ演算。<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%CE%9B%E6%BC%94%E7%AE%97">λ演算</a>由<hanla></hanla><a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E9%98%BF%E9%9A%86%E4%BD%90%C2%B7%E9%82%B1%E5%A5%87">Alonzo Church</a><hanla></hanla>在将带有函数的符号计算进行公式化时提出。λ演算是具有图灵完备性的，它通过数学形式来展现计算过程。图灵完备性表示你可以通过<hanla></hanla>lambda<hanla></hanla>表达任何的数学计算。</p>
+<p>λ演算成为了函数式编程语言的一个坚实的理论基础。很多有名的函数式编程语言，像<hanla></hanla>Haskell<hanla></hanla>和<hanla></hanla>Lisp<hanla></hanla>都是构建在λ演算的基础上的。高阶函数的概念，比如接受其他函数为输入的函数也来自λ演算。</p>
+<p>λ演算的核心概念是表达式。一个<hanla></hanla>lambda<hanla></hanla>表达式可以表示为如下形式：</p>
+<figure class="highlight xml"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">expression</span>&gt;</span> := <span class="hljs-tag">&lt;<span class="hljs-name">variable</span>&gt;</span> | <span class="hljs-tag">&lt;<span class="hljs-name">function</span>&gt;</span>| <span class="hljs-tag">&lt;<span class="hljs-name">application</span>&gt;</span><br></code></pre></td></tr></tbody></table></figure>
+
+<ul>
+<li><strong>variable</strong>–变量就是类似<hanla></hanla>x,y,z<hanla></hanla>的占位符，它们用来表示具体的像<hanla></hanla>1,2<hanla></hanla>之类的值，或者<hanla></hanla>lambda<hanla></hanla>方法。</li>
+<li><strong>functrion</strong>–这是一个匿名的方法定义，它需要一个变量，并产生另一个<hanla></hanla>lambda<hanla></hanla>表达式。例如，<code>λx.x*x</code><hanla></hanla>是一个用来计算数的平方的方法。</li>
+<li><strong>application</strong>–这是将具体的参数应用在函数上的行为。假设你想得到<hanla></hanla>10<hanla></hanla>的平方，那么在λ演算中你会写一个平方函数<code>λx.x*x</code>，并把<hanla></hanla>10<hanla></hanla>代入。这个函数应用将得到<hanla></hanla><code>(λx.x*x) 10 = 10*10 = 100</code>。你不仅仅能够代入简单的像<hanla></hanla>10<hanla></hanla>一样的值，你可以将一个函数代入另一个函数来得到一个新的函数。例如，<code>(λx.x*x) (λz.z+10)</code><hanla></hanla>将会生成一个函数<code>λz.(z+10)*(z+10)</code>。现在，你可以用这个函数得到一个数加上<hanla></hanla>10<hanla></hanla>以后的平方。这是一个高阶函数的例子。</li>
+</ul>
+<p>现在你理解了λ演算和它在函数式编程语言中的影响。让我们来学习它是如何在<hanla></hanla>Java8<hanla></hanla>中实现的。</p>
+<h2 id="在Java8之前传递行为的方式"><a href="#在Java8之前传递行为的方式" class="headerlink" title="在Java8之前传递行为的方式"></a>在<hanla></hanla>Java8<hanla></hanla>之前传递行为的方式</h2><p>在<hanla></hanla>Java8<hanla></hanla>之前，唯一能够用来传递行为的方式是通过匿名类。假设你想要在用户完成注册的同时在另一个线程中给该用户发送一封邮件。在<hanla></hanla>Java8<hanla></hanla>之前，你会写出类似下面的代码。</p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs java">sendEmail(<span class="hljs-keyword">new</span> <span class="hljs-title class_">Runnable</span>() {<br>            <span class="hljs-meta">@Override</span><br>            <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">run</span><span class="hljs-params">()</span> {<br>                System.out.println(<span class="hljs-string">"Sending email..."</span>);<br>            }<br>        });<br></code></pre></td></tr></tbody></table></figure>
+
+<p><code>sendEmail</code><hanla></hanla>方法拥有如下的方法签名。</p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">sendEmail</span><span class="hljs-params">(Runnable runnable)</span><br></code></pre></td></tr></tbody></table></figure>
+
+<p><hanla></hanla>上面提到的代码的问题不仅仅是我们需要封装我们的行为，如将<hanla></hanla><code>run</code><hanla></hanla>方法直接放在一个对象中，更严重的问题是它丢失了程序员的意图，如将行为传递到<hanla></hanla><code>sendEmail</code><hanla></hanla>方法中。如果你使用过<hanla></hanla>Guava<hanla></hanla>类库，你肯定感受到了编写匿名类的痛苦。一个简单的用来过滤所有任务的标题中有<hanla></hanla><strong>lambda</strong><hanla></hanla>的例子如下所示。</p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs java">Iterable&lt;Task&gt; lambdaTasks = Iterables.filter(tasks, <span class="hljs-keyword">new</span> <span class="hljs-title class_">Predicate</span>&lt;Task&gt;() {<br>            <span class="hljs-meta">@Override</span><br>            <span class="hljs-keyword">public</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">apply</span><span class="hljs-params">(Task task)</span> {<br>                <span class="hljs-keyword">return</span> input.getTitle().contains(<span class="hljs-string">"lambda"</span>);<br>            }<br>});<br></code></pre></td></tr></tbody></table></figure>
+
+<p>有了<hanla></hanla>Java8<hanla></hanla>的<hanla></hanla>Stream API，你可以在不使用像<hanla></hanla>Guava<hanla></hanla>一样的第三方库的情况下写出上面提及的代码。我们将在<a href="">第三章</a>中讲解<hanla></hanla>Stream，敬请期待。</p>
+<h2 id="Java8-lambda表达式"><a href="#Java8-lambda表达式" class="headerlink" title="Java8 lambda表达式"></a>Java8 lambda<hanla></hanla>表达式</h2><p>在<hanla></hanla>Java8<hanla></hanla>中，我们将使用<hanla></hanla>lambda<hanla></hanla>表达式写出如下的代码。这与我们上面提及过的代码段相同。</p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java">sendEmail(() -&gt; System.out.println(<span class="hljs-string">"Sending email..."</span>));<br></code></pre></td></tr></tbody></table></figure>
+
+<p>上面的展示的代码非常简练，也没有污染程序员想要传递的行为。<code>()</code><hanla></hanla>用来表示这个<hanla></hanla>lambda<hanla></hanla>表达式没有参数，像<hanla></hanla><code>Runnable</code><hanla></hanla>接口中的<hanla></hanla><code>run</code><hanla></hanla>方法就没有任何参数。<code>-&gt;</code><hanla></hanla>是将参数和用来打印出<hanla></hanla><code>Sending email</code><hanla></hanla>的方法主体分隔开的<hanla></hanla>lambda<hanla></hanla>操作符。</p>
+<p>让我再来看看<hanla></hanla><code>Collections.sort</code><hanla></hanla>这个例子来了解<hanla></hanla>lambda<hanla></hanla>表达式是如何使用参数的。为了使名字能够按照它们的长度进行排列，我们向排序方法传入了一个<hanla></hanla><code>Comparator</code>。该<hanla></hanla><code>Comparator</code><hanla></hanla>如下所示。</p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java">Comparator&lt;String&gt; comparator = (first, second) -&gt; first.length() - second.length();<br></code></pre></td></tr></tbody></table></figure>
+
+<p>我们编写的<hanla></hanla>lambda<hanla></hanla>表达式与<hanla></hanla><code>Comparator</code><hanla></hanla>接口中的<hanla></hanla><code>compare</code><hanla></hanla>方法相关联。<code>compare</code><hanla></hanla>方法的签名如下。</p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-type">int</span> <span class="hljs-title function_">compare</span><span class="hljs-params">(T o1, T o2)</span>;<br></code></pre></td></tr></tbody></table></figure>
+
+<p><code>T</code><hanla></hanla>是传给<hanla></hanla><code>Comparator</code><hanla></hanla>接口的类型参数。由于我们是对一组表示名字的字符串进行操作，所以这个例子中它将是字符串类型的。在<hanla></hanla>lambda<hanla></hanla>表达式中我们不需要特意提供该类型——字符串。<code>javac</code><hanla></hanla>编译器会从上下文中推断出它的类型信息。由于我们在给一组字符串排序，Java<hanla></hanla>编译器会推测出两个参数都应该是字符串，而<hanla></hanla><code>compare</code><hanla></hanla>方法只标明需要<hanla></hanla><code>T</code><hanla></hanla>这一种类型。像这样通过上下文推断类型的行为称作类型推断。Java8<hanla></hanla>优化了<hanla></hanla>Java<hanla></hanla>原有的类型推断机制，使得它更具有鲁棒性，并能够更好地支持<hanla></hanla>lambda<hanla></hanla>表达式。<code>javac</code><hanla></hanla>会在后台寻找与你<hanla></hanla>lambda<hanla></hanla>表达式相关的信息，并使用该信息来找到参数正确的类型。</p>
+<blockquote>
+<p>在大多数情况下，<code>javac</code><hanla></hanla>会从上下文中推断出类型。如果由于上下文缺失或不完整导致代码不能进行编译，它也就不能推断出类型。例如如果我们将<hanla></hanla><code>String</code><hanla></hanla>的类型信息从<hanla></hanla><code>Comparator</code><hanla></hanla>中移除，那么代码会像下面一样编译失败。</p>
+</blockquote>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-type">Comparator</span> <span class="hljs-variable">comparator</span> <span class="hljs-operator">=</span> (first, second) -&gt; first.length() - second.length(); <span class="hljs-comment">// compilation error - Cannot resolve method 'length()'</span><br></code></pre></td></tr></tbody></table></figure>
+
+<h2 id="lambda表达式是如何在Java8中工作的？"><a href="#lambda表达式是如何在Java8中工作的？" class="headerlink" title="lambda表达式是如何在Java8中工作的？"></a>lambda<hanla></hanla>表达式是如何在<hanla></hanla>Java8<hanla></hanla>中工作的？</h2><p>你也许已经发现<hanla></hanla>lambda<hanla></hanla>表达式是与上面例子中的<hanla></hanla><code>Comparator</code><hanla></hanla>类似的一些接口。你不能对任意的接口使用<hanla></hanla>lambda<hanla></hanla>表达式。<em><strong>只有那些除了<hanla></hanla>Object<hanla></hanla>的方法外只定义了唯一抽象方法的接口可以使用<hanla></hanla>lambda<hanla></hanla>表达式。</strong></em>这一类的接口被称作<strong>函数式接口</strong>，它们可以通过<hanla></hanla><code>@FunctionalInterface</code><hanla></hanla>注解来进行注解。如下所示，<code>Runnable</code><hanla></hanla>接口就是一个函数式接口。</p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@FunctionalInterface</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">Runnable</span> {<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">abstract</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">run</span><span class="hljs-params">()</span>;<br>}<br></code></pre></td></tr></tbody></table></figure>
+
+<p><code>@FunctionalInterface</code><hanla></hanla>注解不是强制需要的，它能够帮助其他工具知道这个接口是一个函数式接口，以此展现出有意义的行为。如果你试图编译一个有<hanla></hanla><code>@FunctionalInterface</code><hanla></hanla>的接口，而该接口有多个抽象方法，那么编译器将会抛出一个<em><strong>发现多个没有重写的抽象方法</strong></em>的异常。同样的，如果你对一个没有任何方法的接口添加<hanla></hanla><code>@FunctionalInterface</code><hanla></hanla>的注解，比如一个标记接口，那么你将会得到一条<em><strong>没有找到目标方法的</strong></em>的消息。</p>
+<p>让我们来解答一个你也许会想到的最重要的问题。<em><strong>Java8<hanla></hanla>中的<hanla></hanla>lambda<hanla></hanla>表达式是仅仅针对匿名类的语法糖吗，或者说函数式接口是如何转换为字节码的？</strong></em>简单的答案是<strong>不是</strong>。Java8<hanla></hanla>不使用匿名内部类主要有两个原因：</p>
+<ol>
+<li><p><strong>性能开销</strong>：如果<hanla></hanla>lambda<hanla></hanla>表达式是通过使用匿名类来实现的，那么每一个<hanla></hanla>lambda<hanla></hanla>表达式都要在磁盘上产生一个文件。如果这些类在<hanla></hanla>JVM<hanla></hanla>启动时被加载，那么<hanla></hanla>JVM<hanla></hanla>的启动时间将会增加，因为所有的类在使用前都要进行加载和验证。</p>
+</li>
+<li><p><strong>未来改变的可能性</strong>：如果<hanla></hanla>Java8<hanla></hanla>的设计者从开始就使用了匿名类，那么这将限制<hanla></hanla>lambda<hanla></hanla>表达式的实现方式在将来的变化。</p>
+</li>
+</ol>
+<h3 id="使用invokedynamic"><a href="#使用invokedynamic" class="headerlink" title="使用invokedynamic"></a>使用<hanla></hanla>invokedynamic</h3><p>Java8<hanla></hanla>设计者决定使用在<hanla></hanla>Java7<hanla></hanla>中添加的<hanla></hanla><code>invokedynamic</code><hanla></hanla>指令来在运行时推迟编译策略的执行。当<hanla></hanla><code>javac</code><hanla></hanla>编译代码的时候，它会捕捉到<hanla></hanla>lambda<hanla></hanla>表达式并生成一个<hanla></hanla><code>invokedynamic</code><hanla></hanla>的调用（被叫做<hanla></hanla>lambda<hanla></hanla>工厂）。当<hanla></hanla><code>invokedynamic</code><hanla></hanla>命令被调用时，它会返回一个<hanla></hanla>lambda<hanla></hanla>要转化的函数式接口的实例。例如，我来查看<hanla></hanla><code>Collections.sort</code><hanla></hanla>的字节码，它如下所示。</p>
+<figure class="highlight yaml"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-string">public</span> <span class="hljs-string">static</span> <span class="hljs-string">void</span> <span class="hljs-string">main(java.lang.String[]);</span><br>    <span class="hljs-attr">Code:</span><br>       <span class="hljs-attr">0:</span> <span class="hljs-string">iconst_3</span><br>       <span class="hljs-attr">1:</span> <span class="hljs-string">anewarray</span>     <span class="hljs-comment">#2                  // class java/lang/String</span><br>       <span class="hljs-attr">4:</span> <span class="hljs-string">dup</span><br>       <span class="hljs-attr">5:</span> <span class="hljs-string">iconst_0</span><br>       <span class="hljs-attr">6:</span> <span class="hljs-string">ldc</span>           <span class="hljs-comment">#3                  // String shekhar</span><br>       <span class="hljs-attr">8:</span> <span class="hljs-string">aastore</span><br>       <span class="hljs-attr">9:</span> <span class="hljs-string">dup</span><br>      <span class="hljs-attr">10:</span> <span class="hljs-string">iconst_1</span><br>      <span class="hljs-attr">11:</span> <span class="hljs-string">ldc</span>           <span class="hljs-comment">#4                  // String rahul</span><br>      <span class="hljs-attr">13:</span> <span class="hljs-string">aastore</span><br>      <span class="hljs-attr">14:</span> <span class="hljs-string">dup</span><br>      <span class="hljs-attr">15:</span> <span class="hljs-string">iconst_2</span><br>      <span class="hljs-attr">16:</span> <span class="hljs-string">ldc</span>           <span class="hljs-comment">#5                  // String sameer</span><br>      <span class="hljs-attr">18:</span> <span class="hljs-string">aastore</span><br>      <span class="hljs-attr">19:</span> <span class="hljs-string">invokestatic</span>  <span class="hljs-comment">#6                  // Method java/util/Arrays.asList:([Ljava/lang/Object;)Ljava/util/List;</span><br>      <span class="hljs-attr">22:</span> <span class="hljs-string">astore_1</span><br>      <span class="hljs-attr">23:</span> <span class="hljs-string">invokedynamic</span> <span class="hljs-comment">#7,  0              // InvokeDynamic #0:compare:()Ljava/util/Comparator;</span><br>      <span class="hljs-attr">28:</span> <span class="hljs-string">astore_2</span><br>      <span class="hljs-attr">29:</span> <span class="hljs-string">aload_1</span><br>      <span class="hljs-attr">30:</span> <span class="hljs-string">aload_2</span><br>      <span class="hljs-attr">31:</span> <span class="hljs-string">invokestatic</span>  <span class="hljs-comment">#8                  // Method java/util/Collections.sort:(Ljava/util/List;Ljava/util/Comparator;)V</span><br>      <span class="hljs-attr">34:</span> <span class="hljs-string">getstatic</span>     <span class="hljs-comment">#9                  // Field java/lang/System.out:Ljava/io/PrintStream;</span><br>      <span class="hljs-attr">37:</span> <span class="hljs-string">aload_1</span><br>      <span class="hljs-attr">38:</span> <span class="hljs-string">invokevirtual</span> <span class="hljs-comment">#10                 // Method java/io/PrintStream.println:(Ljava/lang/Object;)V</span><br>      <span class="hljs-attr">41:</span> <span class="hljs-string">return</span><br><span class="hljs-string">}</span><br></code></pre></td></tr></tbody></table></figure>
+
+<p><hanla></hanla>该字节码有意思的地方在第<hanla></hanla>23<hanla></hanla>行<hanla></hanla><code>23: invokedynamic #7,  0              // InvokeDynamic #0:compare:()Ljava/util/Comparator;</code>，也就是生成一个<hanla></hanla><code>invokedynamic</code><hanla></hanla>的地方。</p>
+<p>第二步是将<hanla></hanla>lambda<hanla></hanla>表达式的主体部分转化成通过<hanla></hanla><code>invokedynamic</code><hanla></hanla>指令调用的方法。这一步让<hanla></hanla>JVM<hanla></hanla>实现者能够自由地选取他们自己的策略。我省略了这个话题相关的内容，你可以在<hanla></hanla><a target="_blank" rel="noopener" href="http://cr.openjdk.java.net/~briangoetz/lambda/lambda-translation.html%E4%B8%AD%E9%98%85%E8%AF%BB%E5%88%B0%E6%9B%B4%E5%A4%9A%E7%9A%84%E5%86%85%E5%AE%B9%E3%80%82">http://cr.openjdk.java.net/~briangoetz/lambda/lambda-translation.html<hanla></hanla>中阅读到更多的内容。</a></p>
+<h2 id="匿名类-vs-lambda"><a href="#匿名类-vs-lambda" class="headerlink" title="匿名类 vs lambda"></a>匿名类 vs lambda</h2><p><hanla></hanla>让我们通过比较匿名类和<hanla></hanla>lambda<hanla></hanla>表达式来比较它们的不同。</p>
+<ol>
+<li>在匿名类中，<code>this</code><hanla></hanla>表示匿名类自己，而在<hanla></hanla>lambda<hanla></hanla>表达式中，<code>this</code><hanla></hanla>表示包含了<hanla></hanla>lambda<hanla></hanla>表达式的类。</li>
+<li>你可以在匿名类这个封闭类中隐藏变量。在<hanla></hanla>lambda<hanla></hanla>表达式中这么做时将产生一个编译错误。</li>
+<li>lambda<hanla></hanla>表达式的类型是由上下文决定的，而匿名类的类型是由你创建匿名类时指定的。</li>
+</ol>
+<h2 id="我需要自己编写函数式接口吗？"><a href="#我需要自己编写函数式接口吗？" class="headerlink" title="我需要自己编写函数式接口吗？"></a>我需要自己编写函数式接口吗？</h2><p>Java8<hanla></hanla>默认提供了好多函数式编程接口来供你在代码中使用。它们在<hanla></hanla><code>java.util.function</code><hanla></hanla>包中。让我们看一下其中的一部分。</p>
+<h3 id="java-util-function-Predicate"><a href="#java-util-function-Predicate" class="headerlink" title="java.util.function.Predicate"></a>java.util.function.Predicate<t></t></h3><p><hanla></hanla>这个函数式接口被用来定义某些情形的检查，类似于断言。<code>Predicate</code><hanla></hanla>接口有一个叫做<hanla></hanla><code>test</code><hanla></hanla>的方法，它以泛型<hanla></hanla><code>T</code><hanla></hanla>为参数，返回一个布尔值。举例来说，如果我们想从一串名字中找到所有以<hanla></hanla><strong>s</strong><hanla></hanla>开头的名字，那么我们将向下面这样使用<hanla></hanla><code>Predicate</code>。</p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java">Predicate&lt;String&gt; namesStartingWithS = name -&gt; name.startsWith(<span class="hljs-string">"s"</span>);<br></code></pre></td></tr></tbody></table></figure>
+
+<h3 id="java-util-function-Consumer"><a href="#java-util-function-Consumer" class="headerlink" title="java.util.function.Consumer"></a>java.util.function.Consumer<t></t></h3><p><hanla></hanla>这个函数式接口被用来执行一些不用产生输出的动作。<code>Comsumer</code><hanla></hanla>接口有一个以泛型<hanla></hanla><code>T</code><hanla></hanla>为参数且没有返回值的<hanla></hanla><code>accept</code><hanla></hanla>方法。比如将一条给定的信息通过邮件发出。</p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java">Consumer&lt;String&gt; messageConsumer = message -&gt; System.out.println(message);<br></code></pre></td></tr></tbody></table></figure>
+
+<h3 id="java-util-function-Function-lt-T-R-gt"><a href="#java-util-function-Function-lt-T-R-gt" class="headerlink" title="java.util.function.Function<T,R>"></a>java.util.function.Function&lt;T,R&gt;</h3><p><hanla></hanla>这个函数式接口接受一个参数并产生一个结果。例如，如果我们想要将姓名列表中的所有名字都大写，我们可以写一个像下面这样的方法。</p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java">Function&lt;String, String&gt; toUpperCase = name -&gt; name.toUpperCase();<br></code></pre></td></tr></tbody></table></figure>
+
+<h3 id="java-util-function-Supplier"><a href="#java-util-function-Supplier" class="headerlink" title="java.util.function.Supplier"></a>java.util.function.Supplier<t></t></h3><p><hanla></hanla>这个函数式接口不需要任何参数，却会产生一个值。这可以被用来像下面这样生成唯一标志码。</p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java">Supplier&lt;String&gt; uuidGenerator= () -&gt; UUID.randomUUID().toString();<br></code></pre></td></tr></tbody></table></figure>
+
+<p>我们将在这一系列教程中涉及更多的函数式接口。</p>
+<h2 id="方法引用"><a href="#方法引用" class="headerlink" title="方法引用"></a>方法引用</h2><p>有时候你会创建一些只调用特定方法的<hanla></hanla>lambda<hanla></hanla>表达式，比如<hanla></hanla><code>Function&lt;String, Integer&gt; strToLength = str -&gt; str.length();</code>。这个<hanla></hanla>lambda<hanla></hanla>只在<hanla></hanla><code>String</code><hanla></hanla>对象上调用<hanla></hanla><code>length()</code><hanla></hanla>方法。这种情况可以通过使用方法引用来简化成<hanla></hanla><code>Function&lt;String, Integer&gt; strToLength = String::length;</code>。这可以被看做是只调用单个方法的<hanla></hanla>lambda<hanla></hanla>表达式的简化标记。在该表达式<hanla></hanla><code>String::length</code><hanla></hanla>中，<code>String</code><hanla></hanla>是目标引用，<code>::</code><hanla></hanla>是分隔符，<code>length</code><hanla></hanla>是在目标引用中将会被调用的方法。你在静态方法和实例方法中都可以使用方法引用。</p>
+<h3 id="静态方法引用"><a href="#静态方法引用" class="headerlink" title="静态方法引用"></a>静态方法引用</h3><p>假设我们要找到一串数中最大的一个，那么我们可以写一个像<hanla></hanla><code>Function&lt;List&lt;Integer&gt;, Integer&gt; maxFn = Collections::max</code><hanla></hanla>这样的方法引用。<code>max</code><hanla></hanla>是<hanla></hanla><code>Collections</code><hanla></hanla>类中一个以<hanla></hanla><code>list</code><hanla></hanla>为参数的静态方法。然后你可以像<hanla></hanla><code>maxFn.apply(Arrays.asList(1, 10, 3, 5))</code><hanla></hanla>这样来调用。上面的<hanla></hanla>lambda<hanla></hanla>表达式是与<hanla></hanla><code>Function&lt;List&lt;Integer&gt;, Integer&gt; maxFn = (numbers) -&gt; Collections.max(numbers);</code>等价的。</p>
+<h3 id="实例方法引用"><a href="#实例方法引用" class="headerlink" title="实例方法引用"></a>实例方法引用</h3><p>这是一类为实例方法使用的方法引用，比如在<hanla></hanla><code>String::toUpperCase</code><hanla></hanla>在<hanla></hanla><code>String</code><hanla></hanla>引用上调用了<hanla></hanla><code>toUpperCase</code><hanla></hanla>方法。你也可以对有参数的方法使用方法引用，像<hanla></hanla><code>BiFunction&lt;String, String, String&gt; concatFn = String::concat</code>。<code>concatFn</code><hanla></hanla>可以像<hanla></hanla><code>concatFn.apply("shekhar", "gulati")</code><hanla></hanla>这样被调用。<code>concat</code><hanla></hanla>方法是字符串对象的需要一个参数的方法，形式为<code>"shekhar".concat("gulati")</code>。</p>
+<h2 id="练习-gt-gt-写自己的lambda"><a href="#练习-gt-gt-写自己的lambda" class="headerlink" title="练习>>写自己的lambda"></a>练习&gt;&gt;<hanla></hanla>写自己的<hanla></hanla>lambda</h2><p><hanla></hanla>让我们看一下下面的代码，并把我们学的应用起来。</p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Exercise_Lambdas</span> {<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> {<br>        List&lt;Task&gt; tasks = getTasks();<br>        List&lt;String&gt; titles = taskTitles(tasks);<br>        <span class="hljs-keyword">for</span> (String title : titles) {<br>            System.out.println(title);<br>        }<br>    }<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> List&lt;String&gt; <span class="hljs-title function_">taskTitles</span><span class="hljs-params">(List&lt;Task&gt; tasks)</span> {<br>        List&lt;String&gt; readingTitles = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;&gt;();<br>        <span class="hljs-keyword">for</span> (Task task : tasks) {<br>            <span class="hljs-keyword">if</span> (task.getType() == TaskType.READING) {<br>                readingTitles.add(task.getTitle());<br>            }<br>        }<br>        <span class="hljs-keyword">return</span> readingTitles;<br>    }<br><br>}<br></code></pre></td></tr></tbody></table></figure>
+
+<p><hanla></hanla>上面的代码首先从一个工具方法<hanla></hanla><code>getTasks</code><hanla></hanla>中获取所有的任务。我们对<hanla></hanla><code>getTasks</code><hanla></hanla>方法的内部实现不感兴趣。<code>getTasks</code><hanla></hanla>方法可以从<hanla></hanla>web、数据库或者内存中来获取任务。一旦你有了任务，我们过滤出所有的阅读任务并抽取出这些任务的标题。我们将抽取的标题存入一个链表并最终返回所有的阅读标题。</p>
+<p>让我们从最简单的重构开始——通过方法引用在链表上使用<hanla></hanla><code>foreach</code><hanla></hanla>方法。</p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Exercise_Lambdas</span> {<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> {<br>        List&lt;Task&gt; tasks = getTasks();<br>        List&lt;String&gt; titles = taskTitles(tasks);<br>        titles.forEach(System.out::println);<br>    }<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> List&lt;String&gt; <span class="hljs-title function_">taskTitles</span><span class="hljs-params">(List&lt;Task&gt; tasks)</span> {<br>        List&lt;String&gt; readingTitles = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;&gt;();<br>        <span class="hljs-keyword">for</span> (Task task : tasks) {<br>            <span class="hljs-keyword">if</span> (task.getType() == TaskType.READING) {<br>                readingTitles.add(task.getTitle());<br>            }<br>        }<br>        <span class="hljs-keyword">return</span> readingTitles;<br>    }<br><br>}<br></code></pre></td></tr></tbody></table></figure>
+
+<p><hanla></hanla>用<hanla></hanla><code>Predicate&lt;T&gt;</code><hanla></hanla>来过滤我们的任务。</p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Exercise_Lambdas</span> {<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> {<br>        List&lt;Task&gt; tasks = getTasks();<br>        List&lt;String&gt; titles = taskTitles(tasks, task -&gt; task.getType() == TaskType.READING);<br>        titles.forEach(System.out::println);<br>    }<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> List&lt;String&gt; <span class="hljs-title function_">taskTitles</span><span class="hljs-params">(List&lt;Task&gt; tasks, Predicate&lt;Task&gt; filterTasks)</span> {<br>        List&lt;String&gt; readingTitles = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;&gt;();<br>        <span class="hljs-keyword">for</span> (Task task : tasks) {<br>            <span class="hljs-keyword">if</span> (filterTasks.test(task)) {<br>                readingTitles.add(task.getTitle());<br>            }<br>        }<br>        <span class="hljs-keyword">return</span> readingTitles;<br>    }<br><br>}<br></code></pre></td></tr></tbody></table></figure>
+
+<p><hanla></hanla>用<hanla></hanla><code>Function&lt;T,R&gt;</code><hanla></hanla>来从我们的任务中抽取标题。</p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Exercise_Lambdas</span> {<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> {<br>        List&lt;Task&gt; tasks = getTasks();<br>        List&lt;String&gt; titles = taskTitles(tasks, task -&gt; task.getType() == TaskType.READING, task -&gt; task.getTitle());<br>        titles.forEach(System.out::println);<br>    }<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> &lt;R&gt; List&lt;R&gt; <span class="hljs-title function_">taskTitles</span><span class="hljs-params">(List&lt;Task&gt; tasks, Predicate&lt;Task&gt; filterTasks, Function&lt;Task, R&gt; extractor)</span> {<br>        List&lt;R&gt; readingTitles = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;&gt;();<br>        <span class="hljs-keyword">for</span> (Task task : tasks) {<br>            <span class="hljs-keyword">if</span> (filterTasks.test(task)) {<br>                readingTitles.add(extractor.apply(task));<br>            }<br>        }<br>        <span class="hljs-keyword">return</span> readingTitles;<br>    }<br>}<br></code></pre></td></tr></tbody></table></figure>
+
+<p><hanla></hanla>对提取器使用方法引用。</p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> {<br>    List&lt;Task&gt; tasks = getTasks();<br>    List&lt;String&gt; titles = filterAndExtract(tasks, task -&gt; task.getType() == TaskType.READING, Task::getTitle);<br>    titles.forEach(System.out::println);<br>    List&lt;LocalDate&gt; createdOnDates = filterAndExtract(tasks, task -&gt; task.getType() == TaskType.READING, Task::getCreatedOn);<br>    createdOnDates.forEach(System.out::println);<br>    List&lt;Task&gt; filteredTasks = filterAndExtract(tasks, task -&gt; task.getType() == TaskType.READING, Function.identity());<br>    filteredTasks.forEach(System.out::println);<br>}<br></code></pre></td></tr></tbody></table></figure>
+
+<p><hanla></hanla>我们也可以通过编写我们自己的<strong>函数式接口</strong>，这样可以清楚地描述开发者的意图。我们可以创建一个继承于<hanla></hanla><code>Function</code><hanla></hanla>接口的<hanla></hanla><code>TaskExtractor</code><hanla></hanla>接口。该接口的输入类型被限定为<hanla></hanla><code>Task</code>，输出类型由<hanla></hanla>lambda<hanla></hanla>的实现决定。这样由于输入类型始终是<hanla></hanla><code>Task</code>，开发者只需要关注返回值的类型，</p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Exercise_Lambdas</span> {<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> {<br>        List&lt;Task&gt; tasks = getTasks();<br>        List&lt;Task&gt; filteredTasks = filterAndExtract(tasks, task -&gt; task.getType() == TaskType.READING, TaskExtractor.identityOp());<br>        filteredTasks.forEach(System.out::println);<br>    }<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> &lt;R&gt; List&lt;R&gt; <span class="hljs-title function_">filterAndExtract</span><span class="hljs-params">(List&lt;Task&gt; tasks, Predicate&lt;Task&gt; filterTasks, TaskExtractor&lt;R&gt; extractor)</span> {<br>        List&lt;R&gt; readingTitles = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;&gt;();<br>        <span class="hljs-keyword">for</span> (Task task : tasks) {<br>            <span class="hljs-keyword">if</span> (filterTasks.test(task)) {<br>                readingTitles.add(extractor.apply(task));<br>            }<br>        }<br>        <span class="hljs-keyword">return</span> readingTitles;<br>    }<br><br>}<br><br><br><span class="hljs-keyword">interface</span> <span class="hljs-title class_">TaskExtractor</span>&lt;R&gt; <span class="hljs-keyword">extends</span> <span class="hljs-title class_">Function</span>&lt;Task, R&gt; {<br><br>    <span class="hljs-keyword">static</span> TaskExtractor&lt;Task&gt; <span class="hljs-title function_">identityOp</span><span class="hljs-params">()</span> {<br>        <span class="hljs-keyword">return</span> t -&gt; t;<br>    }<br>}<br></code></pre></td></tr></tbody></table></figure>
+                
+              </div>
+            
+            <hr>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/java/" class="category-chain-item">java</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/java/" class="print-no-link">#java</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Java8-lambda</div>
+      <div>http://ysocks.gitee.io/2020/04/15/java8-lambda/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div><hanla></hanla>作者<hanla></hanla></div>
+          <div>YSocket</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div><hanla></hanla>发布于<hanla></hanla></div>
+          <div>2020<hanla></hanla>年<hanla></hanla>4<hanla></hanla>月<hanla></hanla>15<hanla></hanla>日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议<hanla></hanla></div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2020/04/15/Stream-API/" title="Java8-Stream API">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Java8-Stream API</span>
+                        <span class="visible-mobile"><hanla></hanla>上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索<hanla></hanla></h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input"><hanla></hanla>关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js"></script>
+  <link rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css">
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js"></script>
+<script src="/js/events.js"></script>
+<script src="/js/plugins.js"></script>
+
+
+  <script src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js"></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script src="/js/img-lazyload.js"></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src="https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js"></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script src="/js/local-search.js"></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script src="/js/boot.js"></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning"><hanla></hanla>博客在允许 JavaScript 运行的环境下浏览效果更佳<hanla></hanla></div>
+  </noscript>
+
+
+</body></html>

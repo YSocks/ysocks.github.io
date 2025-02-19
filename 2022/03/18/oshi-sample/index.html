@@ -1,0 +1,643 @@
+<!DOCTYPE html><html lang="zh-CN" data-default-color-scheme="auto"><head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="YSocket">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="一、引入jar包　　本项目主要使用第开源jar包：https://github.com/oshi/oshi  1234567891011<dependency>          <groupId>junit</groupId>          <artifactId>junit</artifactId>          <ve">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JAVA通过oshi获取系统和硬件信息">
+<meta property="og:url" content="http://ysocks.gitee.io/2022/03/18/oshi-sample/index.html">
+<meta property="og:site_name" content="YSocket's Blog">
+<meta property="og:description" content="一、引入jar包　　本项目主要使用第开源jar包：https://github.com/oshi/oshi  1234567891011<dependency>          <groupId>junit</groupId>          <artifactId>junit</artifactId>          <ve">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-03-18T07:27:00.000Z">
+<meta property="article:modified_time" content="2022-03-19T14:11:39.786Z">
+<meta property="article:author" content="YSocket">
+<meta property="article:tag" content="java">
+<meta property="article:tag" content="oshi">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>JAVA通过oshi获取系统和硬件信息 - YSocket's Blog</title>
+
+  <link rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css">
+
+
+
+  <link rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css">
+
+  <link rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css">
+
+  <link rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css">
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css">
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css">
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"ysocks.gitee.io","root":"/","version":"1.9.5-a","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"gtag":null},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script src="/js/utils.js"></script>
+  <script src="/js/color-schema.js"></script>
+  
+
+
+  
+<!-- hexo injector head_end start --><style>
+body hanla:after {
+    content: ' ';
+    display: inline;
+    font-family: inherit;
+    font-size: 0.45em;
+}
+
+html code hanla,
+html pre hanla,
+html kbd hanla,
+html samp hanla,
+html ruby hanla,
+html .tag-list-item hanla {
+    display: none;
+}
+
+html ol > hanla,
+html ul > hanla {
+    display: none;
+}
+</style><!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="YSocket's Blog" type="application/atom+xml">
+</head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>YSocket's blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span><hanla></hanla>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax="true" style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="JAVA通过oshi获取系统和硬件信息"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-03-18 15:27" pubdate="">
+          2022<hanla></hanla>年<hanla></hanla>3<hanla></hanla>月<hanla></hanla>18<hanla></hanla>日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          18k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          154 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">JAVA<hanla></hanla>通过<hanla></hanla>oshi<hanla></hanla>获取系统和硬件信息</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h5 id="一、引入jar包"><a href="#一、引入jar包" class="headerlink" title="一、引入jar包"></a>一、引入<hanla></hanla>jar<hanla></hanla>包</h5><p>　　本项目主要使用第开源<hanla></hanla>jar<hanla></hanla>包：<a target="_blank" rel="noopener" href="https://github.com/oshi/oshi">https://github.com/oshi/oshi</a><br>  </p><figure class="highlight xml"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>          <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>junit<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>          <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>junit<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>          <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>RELEASE<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br>      <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br>      <span class="hljs-comment">&lt;!-- https://mvnrepository.com/artifact/com.github.oshi/oshi-core --&gt;</span><br>      <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>          <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>com.github.oshi<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>          <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>oshi-core<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>          <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>3.5.0<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br>      <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br></code></pre></td></tr></tbody></table></figure><p></p>
+<span id="more"></span>
+
+<h5 id="二、测试代码"><a href="#二、测试代码" class="headerlink" title="二、测试代码"></a>二、测试代码<hanla></hanla></h5><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br><span class="line">268</span><br><span class="line">269</span><br><span class="line">270</span><br><span class="line">271</span><br><span class="line">272</span><br><span class="line">273</span><br><span class="line">274</span><br><span class="line">275</span><br><span class="line">276</span><br><span class="line">277</span><br><span class="line">278</span><br><span class="line">279</span><br><span class="line">280</span><br><span class="line">281</span><br><span class="line">282</span><br><span class="line">283</span><br><span class="line">284</span><br><span class="line">285</span><br><span class="line">286</span><br><span class="line">287</span><br><span class="line">288</span><br><span class="line">289</span><br><span class="line">290</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">import</span> org.slf4j.Logger;<br><span class="hljs-keyword">import</span> org.slf4j.LoggerFactory;<br><span class="hljs-keyword">import</span> oshi.SystemInfo;<br><span class="hljs-keyword">import</span> oshi.hardware.*;<br><span class="hljs-keyword">import</span> oshi.hardware.CentralProcessor.TickType;<br><span class="hljs-keyword">import</span> oshi.software.os.*;<br><span class="hljs-keyword">import</span> oshi.software.os.OperatingSystem.ProcessSort;<br><span class="hljs-keyword">import</span> oshi.util.FormatUtil;<br><span class="hljs-keyword">import</span> oshi.util.Util;<br><br><span class="hljs-keyword">import</span> java.util.Arrays;<br><span class="hljs-keyword">import</span> java.util.List;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * The Class SystemInfoTest.</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> dblock[at]dblock[dot]org</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">SystemInfoTest</span> {<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * The main method.</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> args the arguments</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> {<br>        <span class="hljs-comment">// Options: ERROR &gt; WARN &gt; INFO &gt; DEBUG &gt; TRACE</span><br>        <span class="hljs-type">Logger</span> <span class="hljs-variable">LOG</span> <span class="hljs-operator">=</span> LoggerFactory.getLogger(SystemInfoTest.class);<br><br>        LOG.info(<span class="hljs-string">"Initializing System..."</span>);<br>        <span class="hljs-type">SystemInfo</span> <span class="hljs-variable">si</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">SystemInfo</span>();<br><br>        <span class="hljs-type">HardwareAbstractionLayer</span> <span class="hljs-variable">hal</span> <span class="hljs-operator">=</span> si.getHardware();<br>        <span class="hljs-type">OperatingSystem</span> <span class="hljs-variable">os</span> <span class="hljs-operator">=</span> si.getOperatingSystem();<br><br>        System.out.println(os);<br><br>        LOG.info(<span class="hljs-string">"Checking computer system..."</span>);<br>        printComputerSystem(hal.getComputerSystem());<br><br>        LOG.info(<span class="hljs-string">"Checking Processor..."</span>);<br>        printProcessor(hal.getProcessor());<br><br>        LOG.info(<span class="hljs-string">"Checking Memory..."</span>);<br>        printMemory(hal.getMemory());<br><br>        LOG.info(<span class="hljs-string">"Checking CPU..."</span>);<br>        printCpu(hal.getProcessor());<br><br>        LOG.info(<span class="hljs-string">"Checking Processes..."</span>);<br>        printProcesses(os, hal.getMemory());<br><br>        LOG.info(<span class="hljs-string">"Checking Sensors..."</span>);<br>        printSensors(hal.getSensors());<br><br>        LOG.info(<span class="hljs-string">"Checking Power sources..."</span>);<br>        printPowerSources(hal.getPowerSources());<br><br>        LOG.info(<span class="hljs-string">"Checking Disks..."</span>);<br>        printDisks(hal.getDiskStores());<br><br>        LOG.info(<span class="hljs-string">"Checking File System..."</span>);<br>        printFileSystem(os.getFileSystem());<br><br>        LOG.info(<span class="hljs-string">"Checking Network interfaces..."</span>);<br>        printNetworkInterfaces(hal.getNetworkIFs());<br><br>        LOG.info(<span class="hljs-string">"Checking Network parameterss..."</span>);<br>        printNetworkParameters(os.getNetworkParams());<br><br>        <span class="hljs-comment">// hardware: displays</span><br>        LOG.info(<span class="hljs-string">"Checking Displays..."</span>);<br>        printDisplays(hal.getDisplays());<br><br>        <span class="hljs-comment">// hardware: USB devices</span><br>        LOG.info(<span class="hljs-string">"Checking USB Devices..."</span>);<br>        printUsbDevices(hal.getUsbDevices(<span class="hljs-literal">true</span>));<br>    }<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">printComputerSystem</span><span class="hljs-params">(<span class="hljs-keyword">final</span> ComputerSystem computerSystem)</span> {<br><br>        System.out.println(<span class="hljs-string">"manufacturer: "</span> + computerSystem.getManufacturer());<br>        System.out.println(<span class="hljs-string">"model: "</span> + computerSystem.getModel());<br>        System.out.println(<span class="hljs-string">"serialnumber: "</span> + computerSystem.getSerialNumber());<br>        <span class="hljs-keyword">final</span> <span class="hljs-type">Firmware</span> <span class="hljs-variable">firmware</span> <span class="hljs-operator">=</span> computerSystem.getFirmware();<br>        System.out.println(<span class="hljs-string">"firmware:"</span>);<br>        System.out.println(<span class="hljs-string">"  manufacturer: "</span> + firmware.getManufacturer());<br>        System.out.println(<span class="hljs-string">"  name: "</span> + firmware.getName());<br>        System.out.println(<span class="hljs-string">"  description: "</span> + firmware.getDescription());<br>        System.out.println(<span class="hljs-string">"  version: "</span> + firmware.getVersion());<br>        System.out.println(<span class="hljs-string">"  release date: "</span> + (firmware.getReleaseDate() == <span class="hljs-literal">null</span> ? <span class="hljs-string">"unknown"</span><br>                : firmware.getReleaseDate() == <span class="hljs-literal">null</span> ? <span class="hljs-string">"unknown"</span> : FormatUtil.formatDate(firmware.getReleaseDate())));<br>        <span class="hljs-keyword">final</span> <span class="hljs-type">Baseboard</span> <span class="hljs-variable">baseboard</span> <span class="hljs-operator">=</span> computerSystem.getBaseboard();<br>        System.out.println(<span class="hljs-string">"baseboard:"</span>);<br>        System.out.println(<span class="hljs-string">"  manufacturer: "</span> + baseboard.getManufacturer());<br>        System.out.println(<span class="hljs-string">"  model: "</span> + baseboard.getModel());<br>        System.out.println(<span class="hljs-string">"  version: "</span> + baseboard.getVersion());<br>        System.out.println(<span class="hljs-string">"  serialnumber: "</span> + baseboard.getSerialNumber());<br>    }<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">printProcessor</span><span class="hljs-params">(CentralProcessor processor)</span> {<br>        System.out.println(processor);<br>        System.out.println(<span class="hljs-string">" "</span> + processor.getPhysicalPackageCount() + <span class="hljs-string">" physical CPU package(s)"</span>);<br>        System.out.println(<span class="hljs-string">" "</span> + processor.getPhysicalProcessorCount() + <span class="hljs-string">" physical CPU core(s)"</span>);<br>        System.out.println(<span class="hljs-string">" "</span> + processor.getLogicalProcessorCount() + <span class="hljs-string">" logical CPU(s)"</span>);<br><br>        System.out.println(<span class="hljs-string">"Identifier: "</span> + processor.getIdentifier());<br>        System.out.println(<span class="hljs-string">"ProcessorID: "</span> + processor.getProcessorID());<br>    }<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">printMemory</span><span class="hljs-params">(GlobalMemory memory)</span> {<br>        System.out.println(<span class="hljs-string">"Memory: "</span> + FormatUtil.formatBytes(memory.getAvailable()) + <span class="hljs-string">"/"</span><br>                + FormatUtil.formatBytes(memory.getTotal()));<br>        System.out.println(<span class="hljs-string">"Swap used: "</span> + FormatUtil.formatBytes(memory.getSwapUsed()) + <span class="hljs-string">"/"</span><br>                + FormatUtil.formatBytes(memory.getSwapTotal()));<br>    }<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">printCpu</span><span class="hljs-params">(CentralProcessor processor)</span> {<br>        System.out.println(<span class="hljs-string">"Uptime: "</span> + FormatUtil.formatElapsedSecs(processor.getSystemUptime()));<br>        System.out.println(<br>                <span class="hljs-string">"Context Switches/Interrupts: "</span> + processor.getContextSwitches() + <span class="hljs-string">" / "</span> + processor.getInterrupts());<br><br>        <span class="hljs-type">long</span>[] prevTicks = processor.getSystemCpuLoadTicks();<br>        System.out.println(<span class="hljs-string">"CPU, IOWait, and IRQ ticks @ 0 sec:"</span> + Arrays.toString(prevTicks));<br>        <span class="hljs-comment">// Wait a second...</span><br>        Util.sleep(<span class="hljs-number">1000</span>);<br>        <span class="hljs-type">long</span>[] ticks = processor.getSystemCpuLoadTicks();<br>        System.out.println(<span class="hljs-string">"CPU, IOWait, and IRQ ticks @ 1 sec:"</span> + Arrays.toString(ticks));<br>        <span class="hljs-type">long</span> <span class="hljs-variable">user</span> <span class="hljs-operator">=</span> ticks[TickType.USER.getIndex()] - prevTicks[TickType.USER.getIndex()];<br>        <span class="hljs-type">long</span> <span class="hljs-variable">nice</span> <span class="hljs-operator">=</span> ticks[TickType.NICE.getIndex()] - prevTicks[TickType.NICE.getIndex()];<br>        <span class="hljs-type">long</span> <span class="hljs-variable">sys</span> <span class="hljs-operator">=</span> ticks[TickType.SYSTEM.getIndex()] - prevTicks[TickType.SYSTEM.getIndex()];<br>        <span class="hljs-type">long</span> <span class="hljs-variable">idle</span> <span class="hljs-operator">=</span> ticks[TickType.IDLE.getIndex()] - prevTicks[TickType.IDLE.getIndex()];<br>        <span class="hljs-type">long</span> <span class="hljs-variable">iowait</span> <span class="hljs-operator">=</span> ticks[TickType.IOWAIT.getIndex()] - prevTicks[TickType.IOWAIT.getIndex()];<br>        <span class="hljs-type">long</span> <span class="hljs-variable">irq</span> <span class="hljs-operator">=</span> ticks[TickType.IRQ.getIndex()] - prevTicks[TickType.IRQ.getIndex()];<br>        <span class="hljs-type">long</span> <span class="hljs-variable">softirq</span> <span class="hljs-operator">=</span> ticks[TickType.SOFTIRQ.getIndex()] - prevTicks[TickType.SOFTIRQ.getIndex()];<br>        <span class="hljs-type">long</span> <span class="hljs-variable">steal</span> <span class="hljs-operator">=</span> ticks[TickType.STEAL.getIndex()] - prevTicks[TickType.STEAL.getIndex()];<br>        <span class="hljs-type">long</span> <span class="hljs-variable">totalCpu</span> <span class="hljs-operator">=</span> user + nice + sys + idle + iowait + irq + softirq + steal;<br><br>        System.out.format(<br>                <span class="hljs-string">"User: %.1f%% Nice: %.1f%% System: %.1f%% Idle: %.1f%% IOwait: %.1f%% IRQ: %.1f%% SoftIRQ: %.1f%% Steal: %.1f%%%n"</span>,<br>                <span class="hljs-number">100d</span> * user / totalCpu, <span class="hljs-number">100d</span> * nice / totalCpu, <span class="hljs-number">100d</span> * sys / totalCpu, <span class="hljs-number">100d</span> * idle / totalCpu,<br>                <span class="hljs-number">100d</span> * iowait / totalCpu, <span class="hljs-number">100d</span> * irq / totalCpu, <span class="hljs-number">100d</span> * softirq / totalCpu, <span class="hljs-number">100d</span> * steal / totalCpu);<br>        System.out.format(<span class="hljs-string">"CPU load: %.1f%% (counting ticks)%n"</span>, processor.getSystemCpuLoadBetweenTicks() * <span class="hljs-number">100</span>);<br>        System.out.format(<span class="hljs-string">"CPU load: %.1f%% (OS MXBean)%n"</span>, processor.getSystemCpuLoad() * <span class="hljs-number">100</span>);<br>        <span class="hljs-type">double</span>[] loadAverage = processor.getSystemLoadAverage(<span class="hljs-number">3</span>);<br>        System.out.println(<span class="hljs-string">"CPU load averages:"</span> + (loadAverage[<span class="hljs-number">0</span>] &lt; <span class="hljs-number">0</span> ? <span class="hljs-string">" N/A"</span> : String.format(<span class="hljs-string">" %.2f"</span>, loadAverage[<span class="hljs-number">0</span>]))<br>                + (loadAverage[<span class="hljs-number">1</span>] &lt; <span class="hljs-number">0</span> ? <span class="hljs-string">" N/A"</span> : String.format(<span class="hljs-string">" %.2f"</span>, loadAverage[<span class="hljs-number">1</span>]))<br>                + (loadAverage[<span class="hljs-number">2</span>] &lt; <span class="hljs-number">0</span> ? <span class="hljs-string">" N/A"</span> : String.format(<span class="hljs-string">" %.2f"</span>, loadAverage[<span class="hljs-number">2</span>])));<br>        <span class="hljs-comment">// per core CPU</span><br>        <span class="hljs-type">StringBuilder</span> <span class="hljs-variable">procCpu</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">StringBuilder</span>(<span class="hljs-string">"CPU load per processor:"</span>);<br>        <span class="hljs-type">double</span>[] load = processor.getProcessorCpuLoadBetweenTicks();<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">double</span> avg : load) {<br>            procCpu.append(String.format(<span class="hljs-string">" %.1f%%"</span>, avg * <span class="hljs-number">100</span>));<br>        }<br>        System.out.println(procCpu.toString());<br>    }<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">printProcesses</span><span class="hljs-params">(OperatingSystem os, GlobalMemory memory)</span> {<br>        System.out.println(<span class="hljs-string">"Processes: "</span> + os.getProcessCount() + <span class="hljs-string">", Threads: "</span> + os.getThreadCount());<br>        <span class="hljs-comment">// Sort by highest CPU</span><br>        List&lt;OSProcess&gt; procs = Arrays.asList(os.getProcesses(<span class="hljs-number">5</span>, ProcessSort.CPU));<br><br>        System.out.println(<span class="hljs-string">"   PID  %CPU %MEM       VSZ       RSS Name"</span>);<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; procs.size() &amp;&amp; i &lt; <span class="hljs-number">5</span>; i++) {<br>            <span class="hljs-type">OSProcess</span> <span class="hljs-variable">p</span> <span class="hljs-operator">=</span> procs.get(i);<br>            System.out.format(<span class="hljs-string">" %5d %5.1f %4.1f %9s %9s %s%n"</span>, p.getProcessID(),<br>                    <span class="hljs-number">100d</span> * (p.getKernelTime() + p.getUserTime()) / p.getUpTime(),<br>                    <span class="hljs-number">100d</span> * p.getResidentSetSize() / memory.getTotal(), FormatUtil.formatBytes(p.getVirtualSize()),<br>                    FormatUtil.formatBytes(p.getResidentSetSize()), p.getName());<br>        }<br>    }<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">printSensors</span><span class="hljs-params">(Sensors sensors)</span> {<br>        System.out.println(<span class="hljs-string">"Sensors:"</span>);<br>        System.out.format(<span class="hljs-string">" CPU Temperature: %.1f°C%n"</span>, sensors.getCpuTemperature());<br>        System.out.println(<span class="hljs-string">" Fan Speeds: "</span> + Arrays.toString(sensors.getFanSpeeds()));<br>        System.out.format(<span class="hljs-string">" CPU Voltage: %.1fV%n"</span>, sensors.getCpuVoltage());<br>    }<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">printPowerSources</span><span class="hljs-params">(PowerSource[] powerSources)</span> {<br>        <span class="hljs-type">StringBuilder</span> <span class="hljs-variable">sb</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">StringBuilder</span>(<span class="hljs-string">"Power: "</span>);<br>        <span class="hljs-keyword">if</span> (powerSources.length == <span class="hljs-number">0</span>) {<br>            sb.append(<span class="hljs-string">"Unknown"</span>);<br>        } <span class="hljs-keyword">else</span> {<br>            <span class="hljs-type">double</span> <span class="hljs-variable">timeRemaining</span> <span class="hljs-operator">=</span> powerSources[<span class="hljs-number">0</span>].getTimeRemaining();<br>            <span class="hljs-keyword">if</span> (timeRemaining &lt; -<span class="hljs-number">1d</span>) {<br>                sb.append(<span class="hljs-string">"Charging"</span>);<br>            } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (timeRemaining &lt; <span class="hljs-number">0d</span>) {<br>                sb.append(<span class="hljs-string">"Calculating time remaining"</span>);<br>            } <span class="hljs-keyword">else</span> {<br>                sb.append(String.format(<span class="hljs-string">"%d:%02d remaining"</span>, (<span class="hljs-type">int</span>) (timeRemaining / <span class="hljs-number">3600</span>),<br>                        (<span class="hljs-type">int</span>) (timeRemaining / <span class="hljs-number">60</span>) % <span class="hljs-number">60</span>));<br>            }<br>        }<br>        <span class="hljs-keyword">for</span> (PowerSource pSource : powerSources) {<br>            sb.append(String.format(<span class="hljs-string">"%n %s @ %.1f%%"</span>, pSource.getName(), pSource.getRemainingCapacity() * <span class="hljs-number">100d</span>));<br>        }<br>        System.out.println(sb.toString());<br>    }<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">printDisks</span><span class="hljs-params">(HWDiskStore[] diskStores)</span> {<br>        System.out.println(<span class="hljs-string">"Disks:"</span>);<br>        <span class="hljs-keyword">for</span> (HWDiskStore disk : diskStores) {<br>            <span class="hljs-type">boolean</span> <span class="hljs-variable">readwrite</span> <span class="hljs-operator">=</span> disk.getReads() &gt; <span class="hljs-number">0</span> || disk.getWrites() &gt; <span class="hljs-number">0</span>;<br>            System.out.format(<span class="hljs-string">" %s: (model: %s - S/N: %s) size: %s, reads: %s (%s), writes: %s (%s), xfer: %s ms%n"</span>,<br>                    disk.getName(), disk.getModel(), disk.getSerial(),<br>                    disk.getSize() &gt; <span class="hljs-number">0</span> ? FormatUtil.formatBytesDecimal(disk.getSize()) : <span class="hljs-string">"?"</span>,<br>                    readwrite ? disk.getReads() : <span class="hljs-string">"?"</span>, readwrite ? FormatUtil.formatBytes(disk.getReadBytes()) : <span class="hljs-string">"?"</span>,<br>                    readwrite ? disk.getWrites() : <span class="hljs-string">"?"</span>, readwrite ? FormatUtil.formatBytes(disk.getWriteBytes()) : <span class="hljs-string">"?"</span>,<br>                    readwrite ? disk.getTransferTime() : <span class="hljs-string">"?"</span>);<br>            HWPartition[] partitions = disk.getPartitions();<br>            <span class="hljs-keyword">if</span> (partitions == <span class="hljs-literal">null</span>) {<br>                <span class="hljs-comment">// TODO Remove when all OS's implemented</span><br>                <span class="hljs-keyword">continue</span>;<br>            }<br>            <span class="hljs-keyword">for</span> (HWPartition part : partitions) {<br>                System.out.format(<span class="hljs-string">" |-- %s: %s (%s) Maj:Min=%d:%d, size: %s%s%n"</span>, part.getIdentification(),<br>                        part.getName(), part.getType(), part.getMajor(), part.getMinor(),<br>                        FormatUtil.formatBytesDecimal(part.getSize()),<br>                        part.getMountPoint().isEmpty() ? <span class="hljs-string">""</span> : <span class="hljs-string">" @ "</span> + part.getMountPoint());<br>            }<br>        }<br>    }<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">printFileSystem</span><span class="hljs-params">(FileSystem fileSystem)</span> {<br>        System.out.println(<span class="hljs-string">"File System:"</span>);<br><br>        System.out.format(<span class="hljs-string">" File Descriptors: %d/%d%n"</span>, fileSystem.getOpenFileDescriptors(),<br>                fileSystem.getMaxFileDescriptors());<br><br>        OSFileStore[] fsArray = fileSystem.getFileStores();<br>        <span class="hljs-keyword">for</span> (OSFileStore fs : fsArray) {<br>            <span class="hljs-type">long</span> <span class="hljs-variable">usable</span> <span class="hljs-operator">=</span> fs.getUsableSpace();<br>            <span class="hljs-type">long</span> <span class="hljs-variable">total</span> <span class="hljs-operator">=</span> fs.getTotalSpace();<br>            System.out.format(<br>                    <span class="hljs-string">" %s (%s) [%s] %s of %s free (%.1f%%) is %s "</span><br>                            + (fs.getLogicalVolume() != <span class="hljs-literal">null</span> &amp;&amp; fs.getLogicalVolume().length() &gt; <span class="hljs-number">0</span> ? <span class="hljs-string">"[%s]"</span> : <span class="hljs-string">"%s"</span>)<br>                            + <span class="hljs-string">" and is mounted at %s%n"</span>,<br>                    fs.getName(), fs.getDescription().isEmpty() ? <span class="hljs-string">"file system"</span> : fs.getDescription(), fs.getType(),<br>                    FormatUtil.formatBytes(usable), FormatUtil.formatBytes(fs.getTotalSpace()), <span class="hljs-number">100d</span> * usable / total,<br>                    fs.getVolume(), fs.getLogicalVolume(), fs.getMount());<br>        }<br>    }<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">printNetworkInterfaces</span><span class="hljs-params">(NetworkIF[] networkIFs)</span> {<br>        System.out.println(<span class="hljs-string">"Network interfaces:"</span>);<br>        <span class="hljs-keyword">for</span> (NetworkIF net : networkIFs) {<br>            System.out.format(<span class="hljs-string">" Name: %s (%s)%n"</span>, net.getName(), net.getDisplayName());<br>            System.out.format(<span class="hljs-string">"   MAC Address: %s %n"</span>, net.getMacaddr());<br>            System.out.format(<span class="hljs-string">"   MTU: %s, Speed: %s %n"</span>, net.getMTU(), FormatUtil.formatValue(net.getSpeed(), <span class="hljs-string">"bps"</span>));<br>            System.out.format(<span class="hljs-string">"   IPv4: %s %n"</span>, Arrays.toString(net.getIPv4addr()));<br>            System.out.format(<span class="hljs-string">"   IPv6: %s %n"</span>, Arrays.toString(net.getIPv6addr()));<br>            <span class="hljs-type">boolean</span> <span class="hljs-variable">hasData</span> <span class="hljs-operator">=</span> net.getBytesRecv() &gt; <span class="hljs-number">0</span> || net.getBytesSent() &gt; <span class="hljs-number">0</span> || net.getPacketsRecv() &gt; <span class="hljs-number">0</span><br>                    || net.getPacketsSent() &gt; <span class="hljs-number">0</span>;<br>            System.out.format(<span class="hljs-string">"   Traffic: received %s/%s%s; transmitted %s/%s%s %n"</span>,<br>                    hasData ? net.getPacketsRecv() + <span class="hljs-string">" packets"</span> : <span class="hljs-string">"?"</span>,<br>                    hasData ? FormatUtil.formatBytes(net.getBytesRecv()) : <span class="hljs-string">"?"</span>,<br>                    hasData ? <span class="hljs-string">" ("</span> + net.getInErrors() + <span class="hljs-string">" err)"</span> : <span class="hljs-string">""</span>,<br>                    hasData ? net.getPacketsSent() + <span class="hljs-string">" packets"</span> : <span class="hljs-string">"?"</span>,<br>                    hasData ? FormatUtil.formatBytes(net.getBytesSent()) : <span class="hljs-string">"?"</span>,<br>                    hasData ? <span class="hljs-string">" ("</span> + net.getOutErrors() + <span class="hljs-string">" err)"</span> : <span class="hljs-string">""</span>);<br>        }<br>    }<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">printNetworkParameters</span><span class="hljs-params">(NetworkParams networkParams)</span> {<br>        System.out.println(<span class="hljs-string">"Network parameters:"</span>);<br>        System.out.format(<span class="hljs-string">" Host name: %s%n"</span>, networkParams.getHostName());<br>        System.out.format(<span class="hljs-string">" Domain name: %s%n"</span>, networkParams.getDomainName());<br>        System.out.format(<span class="hljs-string">" DNS servers: %s%n"</span>, Arrays.toString(networkParams.getDnsServers()));<br>        System.out.format(<span class="hljs-string">" IPv4 Gateway: %s%n"</span>, networkParams.getIpv4DefaultGateway());<br>        System.out.format(<span class="hljs-string">" IPv6 Gateway: %s%n"</span>, networkParams.getIpv6DefaultGateway());<br>    }<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">printDisplays</span><span class="hljs-params">(Display[] displays)</span> {<br>        System.out.println(<span class="hljs-string">"Displays:"</span>);<br>        <span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>;<br>        <span class="hljs-keyword">for</span> (Display display : displays) {<br>            System.out.println(<span class="hljs-string">" Display "</span> + i + <span class="hljs-string">":"</span>);<br>            System.out.println(display.toString());<br>            i++;<br>        }<br>    }<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">printUsbDevices</span><span class="hljs-params">(UsbDevice[] usbDevices)</span> {<br>        System.out.println(<span class="hljs-string">"USB Devices:"</span>);<br>        <span class="hljs-keyword">for</span> (UsbDevice usbDevice : usbDevices) {<br>            System.out.println(usbDevice.toString());<br>        }<br>    }<br>}<br></code></pre></td></tr></tbody></table></figure>
+<h5 id="三、结果"><a href="#三、结果" class="headerlink" title="三、结果"></a>三、结果<hanla></hanla></h5><figure class="highlight yaml"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-string">Microsoft</span> <span class="hljs-string">Windows</span> <span class="hljs-number">10</span> <span class="hljs-string">build</span> <span class="hljs-number">15063</span><br><span class="hljs-attr">manufacturer:</span> <span class="hljs-string">LENOVO</span><br><span class="hljs-attr">model:</span> <span class="hljs-string">80RU</span><br><span class="hljs-attr">serialnumber:</span> <span class="hljs-string">R90LN08UR9N0B6922009</span><br><span class="hljs-attr">firmware:</span><br>  <span class="hljs-attr">manufacturer:</span> <span class="hljs-string">LENOVO</span><br>  <span class="hljs-attr">name:</span> <span class="hljs-string">E5CN53WW</span><br>  <span class="hljs-attr">description:</span> <span class="hljs-string">E5CN53WW</span><br>  <span class="hljs-attr">version:</span> <span class="hljs-string">LENOVO</span> <span class="hljs-bullet">-</span> <span class="hljs-number">0</span><br>  <span class="hljs-attr">release date:</span> <span class="hljs-number">07</span><span class="hljs-string">/11/2016</span><br><span class="hljs-attr">baseboard:</span><br>  <span class="hljs-attr">manufacturer:</span> <span class="hljs-string">LENOVO</span><br>  <span class="hljs-attr">model:</span> <span class="hljs-string">unknown</span><br>  <span class="hljs-attr">version:</span> <span class="hljs-string">SDK0K09938</span> <span class="hljs-string">WIN</span><br>  <span class="hljs-attr">serialnumber:</span> <span class="hljs-string">R90LN08U</span><br><span class="hljs-string">Intel(R)</span> <span class="hljs-string">Core(TM)</span> <span class="hljs-string">i5-6300HQ</span> <span class="hljs-string">CPU</span> <span class="hljs-string">@</span> <span class="hljs-number">2.</span><span class="hljs-string">30GHz</span><br> <span class="hljs-number">1</span> <span class="hljs-string">physical</span> <span class="hljs-string">CPU</span> <span class="hljs-string">package(s)</span><br> <span class="hljs-number">4</span> <span class="hljs-string">physical</span> <span class="hljs-string">CPU</span> <span class="hljs-string">core(s)</span><br> <span class="hljs-number">4</span> <span class="hljs-string">logical</span> <span class="hljs-string">CPU(s)</span><br><span class="hljs-attr">Identifier:</span> <span class="hljs-string">Intel64</span> <span class="hljs-string">Family</span> <span class="hljs-number">6</span> <span class="hljs-string">Model</span> <span class="hljs-number">94</span> <span class="hljs-string">Stepping</span> <span class="hljs-number">3</span><br><span class="hljs-attr">ProcessorID:</span> <span class="hljs-string">BFEBFBFF000506E3</span><br><span class="hljs-attr">Memory:</span> <span class="hljs-number">1.5</span> <span class="hljs-string">GiB/7.8</span> <span class="hljs-string">GiB</span><br><span class="hljs-attr">Swap used:</span> <span class="hljs-number">84.4</span> <span class="hljs-string">MiB/6.3</span> <span class="hljs-string">GiB</span><br><span class="hljs-attr">Uptime:</span> <span class="hljs-number">1</span> <span class="hljs-string">days,</span> <span class="hljs-number">11</span><span class="hljs-string">:45:25</span><br><span class="hljs-attr">Context Switches/Interrupts:</span> <span class="hljs-number">648525190</span> <span class="hljs-string">/</span> <span class="hljs-number">338012494</span><br><span class="hljs-string">CPU,</span> <span class="hljs-string">IOWait,</span> <span class="hljs-string">and</span> <span class="hljs-string">IRQ</span> <span class="hljs-string">ticks</span> <span class="hljs-string">@</span> <span class="hljs-number">0</span> <span class="hljs-string">sec:[18421421,</span> <span class="hljs-number">0</span><span class="hljs-string">,</span> <span class="hljs-number">10068431</span><span class="hljs-string">,</span> <span class="hljs-number">288934828</span><span class="hljs-string">,</span> <span class="hljs-number">0</span><span class="hljs-string">,</span> <span class="hljs-number">266351</span><span class="hljs-string">,</span> <span class="hljs-number">143296</span><span class="hljs-string">,</span> <span class="hljs-number">0</span><span class="hljs-string">]</span><br><span class="hljs-string">CPU,</span> <span class="hljs-string">IOWait,</span> <span class="hljs-string">and</span> <span class="hljs-string">IRQ</span> <span class="hljs-string">ticks</span> <span class="hljs-string">@</span> <span class="hljs-number">1</span> <span class="hljs-string">sec:[18421578,</span> <span class="hljs-number">0</span><span class="hljs-string">,</span> <span class="hljs-number">10068486</span><span class="hljs-string">,</span> <span class="hljs-number">288938671</span><span class="hljs-string">,</span> <span class="hljs-number">0</span><span class="hljs-string">,</span> <span class="hljs-number">266351</span><span class="hljs-string">,</span> <span class="hljs-number">143304</span><span class="hljs-string">,</span> <span class="hljs-number">0</span><span class="hljs-string">]</span><br><span class="hljs-attr">User:</span> <span class="hljs-number">3.9</span><span class="hljs-string">%</span> <span class="hljs-attr">Nice:</span> <span class="hljs-number">0.0</span><span class="hljs-string">%</span> <span class="hljs-attr">System:</span> <span class="hljs-number">1.4</span><span class="hljs-string">%</span> <span class="hljs-attr">Idle:</span> <span class="hljs-number">94.6</span><span class="hljs-string">%</span> <span class="hljs-attr">IOwait:</span> <span class="hljs-number">0.0</span><span class="hljs-string">%</span> <span class="hljs-attr">IRQ:</span> <span class="hljs-number">0.0</span><span class="hljs-string">%</span> <span class="hljs-attr">SoftIRQ:</span> <span class="hljs-number">0.2</span><span class="hljs-string">%</span> <span class="hljs-attr">Steal:</span> <span class="hljs-number">0.0</span><span class="hljs-string">%</span><br><span class="hljs-attr">CPU load:</span> <span class="hljs-number">13.0</span><span class="hljs-string">%</span> <span class="hljs-string">(counting</span> <span class="hljs-string">ticks)</span><br><span class="hljs-attr">CPU load:</span> <span class="hljs-number">17.4</span><span class="hljs-string">%</span> <span class="hljs-string">(OS</span> <span class="hljs-string">MXBean)</span><br><span class="hljs-attr">CPU load averages:</span> <span class="hljs-string">N/A</span> <span class="hljs-string">N/A</span> <span class="hljs-string">N/A</span><br><span class="hljs-attr">CPU load per processor:</span> <span class="hljs-number">19.3</span><span class="hljs-string">%</span> <span class="hljs-number">12.8</span><span class="hljs-string">%</span> <span class="hljs-number">12.8</span><span class="hljs-string">%</span> <span class="hljs-number">12.8</span><span class="hljs-string">%</span><br><span class="hljs-attr">Processes:</span> <span class="hljs-number">184</span><span class="hljs-string">,</span> <span class="hljs-attr">Threads:</span> <span class="hljs-number">2447</span><br>   <span class="hljs-string">PID</span>  <span class="hljs-string">%CPU</span> <span class="hljs-string">%MEM</span>       <span class="hljs-string">VSZ</span>       <span class="hljs-string">RSS</span> <span class="hljs-string">Name</span><br>     <span class="hljs-number">0</span> <span class="hljs-number">100.0</span>  <span class="hljs-number">0.0</span>    <span class="hljs-number">64</span> <span class="hljs-string">KiB</span>     <span class="hljs-number">8</span> <span class="hljs-string">KiB</span> <span class="hljs-string">System</span> <span class="hljs-string">Idle</span> <span class="hljs-string">Process</span><br>  <span class="hljs-number">5416  </span><span class="hljs-number">10.0</span>  <span class="hljs-number">1.6</span>   <span class="hljs-number">3.4</span> <span class="hljs-string">GiB</span> <span class="hljs-number">130.4</span> <span class="hljs-string">MiB</span> <span class="hljs-string">java.exe</span><br> <span class="hljs-number">12676</span>   <span class="hljs-number">8.8</span>  <span class="hljs-number">1.3</span>   <span class="hljs-number">2.1</span> <span class="hljs-string">GiB</span> <span class="hljs-number">104.9</span> <span class="hljs-string">MiB</span> <span class="hljs-string">java.exe</span><br> <span class="hljs-number">11988</span>   <span class="hljs-number">5.8</span> <span class="hljs-number">16.8</span>   <span class="hljs-number">3.3</span> <span class="hljs-string">GiB</span>   <span class="hljs-number">1.3</span> <span class="hljs-string">GiB</span> <span class="hljs-string">idea64.exe</span><br>  <span class="hljs-number">5312   </span><span class="hljs-number">4.4</span>  <span class="hljs-number">1.3</span>   <span class="hljs-number">2.0</span> <span class="hljs-string">TiB</span> <span class="hljs-number">101.4</span> <span class="hljs-string">MiB</span> <span class="hljs-string">chrome.exe</span><br><span class="hljs-attr">Sensors:</span><br> <span class="hljs-attr">CPU Temperature:</span> <span class="hljs-number">42.0</span><span class="hljs-string">°C</span><br> <span class="hljs-attr">Fan Speeds:</span> [<span class="hljs-number">0</span>]<br> <span class="hljs-attr">CPU Voltage:</span> <span class="hljs-number">0.</span><span class="hljs-string">0V</span><br><span class="hljs-attr">Power:</span> <span class="hljs-string">Charging</span><br> <span class="hljs-string">System</span> <span class="hljs-string">Battery</span> <span class="hljs-string">@</span> <span class="hljs-number">96.6</span><span class="hljs-string">%</span><br><span class="hljs-attr">Disks:</span><br> <span class="hljs-string">\\.\PHYSICALDRIVE0:</span> <span class="hljs-string">(model:</span> <span class="hljs-string">SanDisk</span> <span class="hljs-string">SD7SN6S128G</span> <span class="hljs-string">(标准磁盘驱动器)</span> <span class="hljs-bullet">-</span> <span class="hljs-attr">S/N:</span> <span class="hljs-number">161416401094</span><span class="hljs-string">)</span> <span class="hljs-attr">size:</span> <span class="hljs-number">128.0</span> <span class="hljs-string">GB,</span> <span class="hljs-attr">reads:</span> <span class="hljs-number">1117123</span> <span class="hljs-string">(33.4</span> <span class="hljs-string">GiB),</span> <span class="hljs-attr">writes:</span> <span class="hljs-number">703948</span> <span class="hljs-string">(21.2</span> <span class="hljs-string">GiB),</span> <span class="hljs-attr">xfer:</span> <span class="hljs-number">2570354</span> <span class="hljs-string">ms</span><br> <span class="hljs-string">|--</span> <span class="hljs-string">磁盘</span> <span class="hljs-comment">#0，分区 #0: GPT: Basic Data (GPT: 基本数据) Maj:Min=0:0, size: 471.9 MB @ F:\</span><br> <span class="hljs-string">|--</span> <span class="hljs-string">磁盘</span> <span class="hljs-comment">#0，分区 #1: GPT: System (GPT: 系统) Maj:Min=0:1, size: 104.9 MB</span><br> <span class="hljs-string">|--</span> <span class="hljs-string">磁盘</span> <span class="hljs-comment">#0，分区 #2: GPT: Basic Data (GPT: 基本数据) Maj:Min=0:2, size: 126.6 GB @ C:\</span><br> <span class="hljs-string">|--</span> <span class="hljs-string">磁盘</span> <span class="hljs-comment">#0，分区 #3: GPT: Basic Data (GPT: 基本数据) Maj:Min=0:3, size: 845.2 MB @ G:\</span><br> <span class="hljs-string">\\.\PHYSICALDRIVE1:</span> <span class="hljs-string">(model:</span> <span class="hljs-string">WDC</span> <span class="hljs-string">WD10SPCX-24HWST1</span> <span class="hljs-string">(标准磁盘驱动器)</span> <span class="hljs-bullet">-</span> <span class="hljs-attr">S/N:</span>      <span class="hljs-string">WD-WX31A86F35XC)</span> <span class="hljs-attr">size:</span> <span class="hljs-number">1.0</span> <span class="hljs-string">TB,</span> <span class="hljs-attr">reads:</span> <span class="hljs-number">379263</span> <span class="hljs-string">(6.0</span> <span class="hljs-string">GiB),</span> <span class="hljs-attr">writes:</span> <span class="hljs-number">103105</span> <span class="hljs-string">(2.6</span> <span class="hljs-string">GiB),</span> <span class="hljs-attr">xfer:</span> <span class="hljs-number">4014792</span> <span class="hljs-string">ms</span><br> <span class="hljs-string">|--</span> <span class="hljs-string">磁盘</span> <span class="hljs-comment">#1，分区 #0: GPT: Basic Data (GPT: 基本数据) Maj:Min=1:0, size: 475.9 GB @ D:\</span><br> <span class="hljs-string">|--</span> <span class="hljs-string">磁盘</span> <span class="hljs-comment">#1，分区 #1: GPT: Basic Data (GPT: 基本数据) Maj:Min=1:1, size: 524.3 GB @ E:\</span><br><span class="hljs-attr">File System:</span><br> <span class="hljs-attr">File Descriptors:</span> <span class="hljs-number">0</span><span class="hljs-string">/0</span><br> <span class="hljs-string">本地固定磁盘</span> <span class="hljs-string">(F:)</span> <span class="hljs-string">(Fixed</span> <span class="hljs-string">drive)</span> [<span class="hljs-string">NTFS</span>] <span class="hljs-number">436.1</span> <span class="hljs-string">MiB</span> <span class="hljs-string">of</span> <span class="hljs-number">450.0</span> <span class="hljs-string">MiB</span> <span class="hljs-string">free</span> <span class="hljs-string">(96.9%)</span> <span class="hljs-string">is</span> <span class="hljs-string">\\?\Volume{9afc85a4-9f44-11e7-ab77-a5dc01376557}\</span>  <span class="hljs-string">and</span> <span class="hljs-string">is</span> <span class="hljs-string">mounted</span> <span class="hljs-string">at</span> <span class="hljs-string">F:\</span><br> <span class="hljs-string">本地固定磁盘</span> <span class="hljs-string">(C:)</span> <span class="hljs-string">(Fixed</span> <span class="hljs-string">drive)</span> [<span class="hljs-string">NTFS</span>] <span class="hljs-number">12.9</span> <span class="hljs-string">GiB</span> <span class="hljs-string">of</span> <span class="hljs-number">117.9</span> <span class="hljs-string">GiB</span> <span class="hljs-string">free</span> <span class="hljs-string">(11.0%)</span> <span class="hljs-string">is</span> <span class="hljs-string">\\?\Volume{01a1a160-fbb4-49c7-be19-6dd52882bcbc}\</span>  <span class="hljs-string">and</span> <span class="hljs-string">is</span> <span class="hljs-string">mounted</span> <span class="hljs-string">at</span> <span class="hljs-string">C:\</span><br> <span class="hljs-string">本地固定磁盘</span> <span class="hljs-string">(G:)</span> <span class="hljs-string">(Fixed</span> <span class="hljs-string">drive)</span> [<span class="hljs-string">NTFS</span>] <span class="hljs-number">303.4</span> <span class="hljs-string">MiB</span> <span class="hljs-string">of</span> <span class="hljs-number">806.0</span> <span class="hljs-string">MiB</span> <span class="hljs-string">free</span> <span class="hljs-string">(37.6%)</span> <span class="hljs-string">is</span> <span class="hljs-string">\\?\Volume{9afc85a5-9f44-11e7-ab77-a5dc01376557}\</span>  <span class="hljs-string">and</span> <span class="hljs-string">is</span> <span class="hljs-string">mounted</span> <span class="hljs-string">at</span> <span class="hljs-string">G:\</span><br> <span class="hljs-string">本地固定磁盘</span> <span class="hljs-string">(D:)</span> <span class="hljs-string">(Fixed</span> <span class="hljs-string">drive)</span> [<span class="hljs-string">NTFS</span>] <span class="hljs-number">161.8</span> <span class="hljs-string">GiB</span> <span class="hljs-string">of</span> <span class="hljs-number">443.2</span> <span class="hljs-string">GiB</span> <span class="hljs-string">free</span> <span class="hljs-string">(36.5%)</span> <span class="hljs-string">is</span> <span class="hljs-string">\\?\Volume{a287f045-a9ac-4669-ab44-bdbd74692600}\</span>  <span class="hljs-string">and</span> <span class="hljs-string">is</span> <span class="hljs-string">mounted</span> <span class="hljs-string">at</span> <span class="hljs-string">D:\</span><br> <span class="hljs-string">本地固定磁盘</span> <span class="hljs-string">(E:)</span> <span class="hljs-string">(Fixed</span> <span class="hljs-string">drive)</span> [<span class="hljs-string">NTFS</span>] <span class="hljs-number">246.0</span> <span class="hljs-string">GiB</span> <span class="hljs-string">of</span> <span class="hljs-number">488.3</span> <span class="hljs-string">GiB</span> <span class="hljs-string">free</span> <span class="hljs-string">(50.4%)</span> <span class="hljs-string">is</span> <span class="hljs-string">\\?\Volume{84c6da35-38e7-457e-b528-c12da6ed2898}\</span>  <span class="hljs-string">and</span> <span class="hljs-string">is</span> <span class="hljs-string">mounted</span> <span class="hljs-string">at</span> <span class="hljs-string">E:\</span><br><span class="hljs-attr">Network interfaces:</span><br> <span class="hljs-attr">Name:</span> <span class="hljs-string">wlan0</span> <span class="hljs-string">(Microsoft</span> <span class="hljs-string">Wi-Fi</span> <span class="hljs-string">Direct</span> <span class="hljs-string">Virtual</span> <span class="hljs-string">Adapter)</span><br>   <span class="hljs-attr">MAC Address:</span> <span class="hljs-number">84</span><span class="hljs-string">:ef:18:36:4c:ab</span> <br>   <span class="hljs-attr">MTU:</span> <span class="hljs-number">1500</span><span class="hljs-string">,</span> <span class="hljs-attr">Speed:</span> <span class="hljs-number">0</span> <span class="hljs-string">bps</span> <br>   <span class="hljs-attr">IPv4:</span> [] <br>   <span class="hljs-attr">IPv6:</span> [<span class="hljs-string">fe80:0:0:0:55ed:790e:b70:ea43</span>] <br>   <span class="hljs-attr">Traffic:</span> <span class="hljs-string">received</span> <span class="hljs-string">?/?;</span> <span class="hljs-string">transmitted</span> <span class="hljs-string">?/?</span> <br> <span class="hljs-attr">Name:</span> <span class="hljs-string">net2</span> <span class="hljs-string">(Microsoft</span> <span class="hljs-string">Teredo</span> <span class="hljs-string">Tunneling</span> <span class="hljs-string">Adapter)</span><br>   <span class="hljs-attr">MAC Address:</span> <span class="hljs-number">00</span><span class="hljs-string">:00:00:00:00:00:00:e0</span> <br>   <span class="hljs-attr">MTU:</span> <span class="hljs-number">1280</span><span class="hljs-string">,</span> <span class="hljs-attr">Speed:</span> <span class="hljs-number">100</span> <span class="hljs-string">Kbps</span> <br>   <span class="hljs-attr">IPv4:</span> [] <br>   <span class="hljs-attr">IPv6:</span> [<span class="hljs-number">2001</span><span class="hljs-string">:0:9d38:6ab8:2446:2d3f:34a2:86f5</span>, <span class="hljs-string">fe80:0:0:0:2446:2d3f:34a2:86f5</span>] <br>   <span class="hljs-attr">Traffic:</span> <span class="hljs-string">received</span> <span class="hljs-number">15</span> <span class="hljs-string">packets/2.2</span> <span class="hljs-string">KiB</span> <span class="hljs-string">(0</span> <span class="hljs-string">err);</span> <span class="hljs-string">transmitted</span> <span class="hljs-number">1580 </span><span class="hljs-string">packets/209.9</span> <span class="hljs-string">KiB</span> <span class="hljs-string">(0</span> <span class="hljs-string">err)</span> <br> <span class="hljs-attr">Name:</span> <span class="hljs-string">eth7</span> <span class="hljs-string">(Realtek</span> <span class="hljs-string">PCIe</span> <span class="hljs-string">GBE</span> <span class="hljs-string">Family</span> <span class="hljs-string">Controller)</span><br>   <span class="hljs-attr">MAC Address:</span> <span class="hljs-number">54</span><span class="hljs-string">:ee:75:b0:ed:33</span> <br>   <span class="hljs-attr">MTU:</span> <span class="hljs-number">1500</span><span class="hljs-string">,</span> <span class="hljs-attr">Speed:</span> <span class="hljs-number">0</span> <span class="hljs-string">bps</span> <br>   <span class="hljs-attr">IPv4:</span> [] <br>   <span class="hljs-attr">IPv6:</span> [<span class="hljs-string">fe80:0:0:0:d0:cff0:250f:34d0</span>] <br>   <span class="hljs-attr">Traffic:</span> <span class="hljs-string">received</span> <span class="hljs-string">?/?;</span> <span class="hljs-string">transmitted</span> <span class="hljs-string">?/?</span> <br> <span class="hljs-attr">Name:</span> <span class="hljs-string">wlan2</span> <span class="hljs-string">(Intel(R)</span> <span class="hljs-string">Dual</span> <span class="hljs-string">Band</span> <span class="hljs-string">Wireless-AC</span> <span class="hljs-number">3165</span><span class="hljs-string">)</span><br>   <span class="hljs-attr">MAC Address:</span> <span class="hljs-number">84</span><span class="hljs-string">:ef:18:36:4c:aa</span> <br>   <span class="hljs-attr">MTU:</span> <span class="hljs-number">1500</span><span class="hljs-string">,</span> <span class="hljs-attr">Speed:</span> <span class="hljs-number">72.2</span> <span class="hljs-string">Mbps</span> <br>   <span class="hljs-attr">IPv4:</span> [<span class="hljs-number">172.16</span><span class="hljs-number">.3</span><span class="hljs-number">.132</span>] <br>   <span class="hljs-attr">IPv6:</span> [] <br>   <span class="hljs-attr">Traffic:</span> <span class="hljs-string">received</span> <span class="hljs-number">99670</span> <span class="hljs-string">packets/87.7</span> <span class="hljs-string">MiB</span> <span class="hljs-string">(0</span> <span class="hljs-string">err);</span> <span class="hljs-string">transmitted</span> <span class="hljs-number">68049</span> <span class="hljs-string">packets/14.9</span> <span class="hljs-string">MiB</span> <span class="hljs-string">(0</span> <span class="hljs-string">err)</span> <br><span class="hljs-attr">Network parameters:</span><br> <span class="hljs-attr">Host name:</span> <span class="hljs-string">Sindrol-NTB</span><br> <span class="hljs-attr">Domain name:</span> <span class="hljs-string">Sindrol-NTB</span><br> <span class="hljs-attr">DNS servers:</span> [<span class="hljs-number">202.106</span><span class="hljs-number">.0</span><span class="hljs-number">.20</span>, <span class="hljs-number">114.114</span><span class="hljs-number">.114</span><span class="hljs-number">.114</span>]<br> <span class="hljs-attr">IPv4 Gateway:</span> <span class="hljs-number">172.16</span><span class="hljs-number">.3</span><span class="hljs-number">.254</span><br> <span class="hljs-attr">IPv6 Gateway: ::</span><br><span class="hljs-attr">Displays:</span><br> <span class="hljs-attr">Display 0:</span><br>  <span class="hljs-string">Manuf.</span> <span class="hljs-string">ID=BOE,</span> <span class="hljs-string">Product</span> <span class="hljs-string">ID=65d,</span> <span class="hljs-string">Digital,</span> <span class="hljs-string">Serial=00000000,</span> <span class="hljs-string">ManufDate=1/2015,</span> <span class="hljs-string">EDID</span> <span class="hljs-string">v1.4</span><br>  <span class="hljs-number">34</span> <span class="hljs-string">x</span> <span class="hljs-number">19</span> <span class="hljs-string">cm</span> <span class="hljs-string">(13.4</span> <span class="hljs-string">x</span> <span class="hljs-number">7.5</span> <span class="hljs-string">in)</span><br>  <span class="hljs-attr">Preferred Timing:</span> <span class="hljs-string">Clock</span> <span class="hljs-string">141MHz,</span> <span class="hljs-string">Active</span> <span class="hljs-string">Pixels</span> <span class="hljs-string">1920x1080</span> <br>  <span class="hljs-attr">Manufacturer Data:</span> <span class="hljs-number">000000000000000000000000000000000000</span><br>  <span class="hljs-attr">Unspecified Text:</span> <span class="hljs-string">BOE</span> <span class="hljs-string">HF</span><br>  <span class="hljs-attr">Unspecified Text:</span> <span class="hljs-string">NV156FHM-N42</span><br> <span class="hljs-attr">Display 1:</span><br>  <span class="hljs-string">Manuf.</span> <span class="hljs-string">ID=AOC,</span> <span class="hljs-string">Product</span> <span class="hljs-string">ID=2476,</span> <span class="hljs-string">Digital,</span> <span class="hljs-string">Serial=00000319,</span> <span class="hljs-string">ManufDate=5/2016,</span> <span class="hljs-string">EDID</span> <span class="hljs-string">v1.3</span><br>  <span class="hljs-number">52</span> <span class="hljs-string">x</span> <span class="hljs-number">29</span> <span class="hljs-string">cm</span> <span class="hljs-string">(20.5</span> <span class="hljs-string">x</span> <span class="hljs-number">11.4</span> <span class="hljs-string">in)</span><br>  <span class="hljs-attr">Preferred Timing:</span> <span class="hljs-string">Clock</span> <span class="hljs-string">148MHz,</span> <span class="hljs-string">Active</span> <span class="hljs-string">Pixels</span> <span class="hljs-string">1920x1080</span> <br>  <span class="hljs-attr">Range Limits:</span> <span class="hljs-string">Field</span> <span class="hljs-string">Rate</span> <span class="hljs-number">50</span><span class="hljs-number">-76</span> <span class="hljs-string">Hz</span> <span class="hljs-string">vertical,</span> <span class="hljs-number">30</span><span class="hljs-number">-83</span> <span class="hljs-string">Hz</span> <span class="hljs-string">horizontal,</span> <span class="hljs-attr">Max clock:</span> <span class="hljs-number">170</span> <span class="hljs-string">MHz</span><br>  <span class="hljs-attr">Monitor Name:</span> <span class="hljs-string">2476WM</span><br>  <span class="hljs-attr">Serial Number:</span> <span class="hljs-string">E71G5BA000793</span><br><span class="hljs-attr">USB Devices:</span><br> <span class="hljs-string">Intel(R)</span> <span class="hljs-string">USB</span> <span class="hljs-number">3.0</span> <span class="hljs-string">可扩展主机控制器</span> <span class="hljs-bullet">-</span> <span class="hljs-number">1.0</span> <span class="hljs-string">(Microsoft)</span> <span class="hljs-string">(通用</span> <span class="hljs-string">USB</span> <span class="hljs-string">xHCI</span> <span class="hljs-string">主机控制器)</span><br> <span class="hljs-string">|--</span> <span class="hljs-string">USB</span> <span class="hljs-string">根集线器<hanla></hanla>(USB</span> <span class="hljs-number">3.0</span><span class="hljs-string">)</span> <span class="hljs-string">((标准</span> <span class="hljs-string">USB</span> <span class="hljs-string">集线器))</span><br>     <span class="hljs-string">|--</span> <span class="hljs-string">Apple</span> <span class="hljs-string">Mobile</span> <span class="hljs-string">Device</span> <span class="hljs-string">USB</span> <span class="hljs-string">Driver</span> <span class="hljs-string">(Apple,</span> <span class="hljs-string">Inc.)</span><br>         <span class="hljs-string">|--</span> <span class="hljs-string">Apple</span> <span class="hljs-string">iPhone</span> <span class="hljs-string">(Apple</span> <span class="hljs-string">Inc.)</span><br>     <span class="hljs-string">|--</span> <span class="hljs-string">USB</span> <span class="hljs-string">Composite</span> <span class="hljs-string">Device</span> <span class="hljs-string">((标准</span> <span class="hljs-string">USB</span> <span class="hljs-string">主控制器))</span><br>         <span class="hljs-string">|--</span> <span class="hljs-string">Lenovo</span> <span class="hljs-string">EasyCamera</span> <span class="hljs-string">(Bison)</span><br>     <span class="hljs-string">|--</span> <span class="hljs-string">USB</span> <span class="hljs-string">Composite</span> <span class="hljs-string">Device</span> <span class="hljs-string">((标准</span> <span class="hljs-string">USB</span> <span class="hljs-string">主控制器))</span><br>         <span class="hljs-string">|--</span> <span class="hljs-string">USB</span> <span class="hljs-string">输入设备</span> <span class="hljs-string">((标准系统设备))</span><br>             <span class="hljs-string">|--</span> <span class="hljs-string">HID</span> <span class="hljs-string">Keyboard</span> <span class="hljs-string">Device</span> <span class="hljs-string">((标准键盘))</span><br>         <span class="hljs-string">|--</span> <span class="hljs-string">USB</span> <span class="hljs-string">输入设备</span> <span class="hljs-string">((标准系统设备))</span><br>             <span class="hljs-string">|--</span> <span class="hljs-string">HID-compliant</span> <span class="hljs-string">mouse</span> <span class="hljs-string">(Microsoft)</span><br>             <span class="hljs-string">|--</span> <span class="hljs-string">符合</span> <span class="hljs-string">HID</span> <span class="hljs-string">标准的供应商定义设备</span> <span class="hljs-string">((标准系统设备))</span><br>             <span class="hljs-string">|--</span> <span class="hljs-string">符合</span> <span class="hljs-string">HID</span> <span class="hljs-string">标准的用户控制设备</span> <span class="hljs-string">(Microsoft)</span><br>             <span class="hljs-string">|--</span> <span class="hljs-string">符合</span> <span class="hljs-string">HID</span> <span class="hljs-string">标准的系统控制器</span> <span class="hljs-string">((标准系统设备))</span><br>         <span class="hljs-string">|--</span> <span class="hljs-string">USB</span> <span class="hljs-string">输入设备</span> <span class="hljs-string">((标准系统设备))</span><br>             <span class="hljs-string">|--</span> <span class="hljs-string">符合</span> <span class="hljs-string">HID</span> <span class="hljs-string">标准的供应商定义设备</span> <span class="hljs-string">((标准系统设备))</span><br>     <span class="hljs-string">|--</span> <span class="hljs-string">USB</span> <span class="hljs-string">输入设备</span> <span class="hljs-string">((标准系统设备))</span><br>         <span class="hljs-string">|--</span> <span class="hljs-string">HID-compliant</span> <span class="hljs-string">mouse</span> <span class="hljs-string">(Microsoft)</span><br>     <span class="hljs-string">|--</span> <span class="hljs-string">英特尔<hanla></hanla>(R)</span> <span class="hljs-string">无线</span> <span class="hljs-string">Bluetooth(R)</span> <span class="hljs-string">(Intel</span> <span class="hljs-string">Corporation)</span><br></code></pre></td></tr></tbody></table></figure>
+                
+              </div>
+            
+            <hr>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/java/" class="print-no-link">#java</a>
+      
+        <a href="/tags/oshi/" class="print-no-link">#oshi</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>JAVA<hanla></hanla>通过<hanla></hanla>oshi<hanla></hanla>获取系统和硬件信息<hanla></hanla></div>
+      <div>http://ysocks.gitee.io/2022/03/18/oshi-sample/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div><hanla></hanla>作者<hanla></hanla></div>
+          <div>YSocket</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div><hanla></hanla>发布于<hanla></hanla></div>
+          <div>2022<hanla></hanla>年<hanla></hanla>3<hanla></hanla>月<hanla></hanla>18<hanla></hanla>日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议<hanla></hanla></div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/03/26/idea-debug-4-skills/" title="4 个 yyds 的 IDEA 高级调试技巧">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">4 个 yyds 的 IDEA 高级调试技巧</span>
+                        <span class="visible-mobile">上一篇<hanla></hanla></span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/03/12/Cache-Aside-pattern/" title="Cache-Aside pattern">
+                        <span class="hidden-mobile">Cache-Aside pattern</span>
+                        <span class="visible-mobile"><hanla></hanla>下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索<hanla></hanla></h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input"><hanla></hanla>关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js"></script>
+  <link rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css">
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js"></script>
+<script src="/js/events.js"></script>
+<script src="/js/plugins.js"></script>
+
+
+  <script src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js"></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script src="/js/img-lazyload.js"></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src="https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js"></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script src="/js/local-search.js"></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script src="/js/boot.js"></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning"><hanla></hanla>博客在允许 JavaScript 运行的环境下浏览效果更佳<hanla></hanla></div>
+  </noscript>
+
+
+</body></html>
