@@ -3,11 +3,11 @@
   <title>YSocket&#39;s Blog</title>
   
   <subtitle>YSocket&#39;s Blog</subtitle>
-  <link href="http://ysocks.gitee.io/atom.xml" rel="self"/>
+  <link href="http://ysocket-blog.pages.dev/atom.xml" rel="self"/>
   
-  <link href="http://ysocks.gitee.io/"/>
+  <link href="http://ysocket-blog.pages.dev/"/>
   <updated>2025-02-20T01:14:55.826Z</updated>
-  <id>http://ysocks.gitee.io/</id>
+  <id>http://ysocket-blog.pages.dev/</id>
   
   <author>
     <name>YSocket</name>
@@ -18,8 +18,8 @@
   
   <entry>
     <title>测试页</title>
-    <link href="http://ysocks.gitee.io/2025/02/20/test-page/"/>
-    <id>http://ysocks.gitee.io/2025/02/20/test-page/</id>
+    <link href="http://ysocket-blog.pages.dev/2025/02/20/test-page/"/>
+    <id>http://ysocket-blog.pages.dev/2025/02/20/test-page/</id>
     <published>2025-02-20T01:12:56.000Z</published>
     <updated>2025-02-20T01:14:55.826Z</updated>
     
@@ -42,8 +42,8 @@
   
   <entry>
     <title>@FeignClient导致 RequestParam.value() was empty</title>
-    <link href="http://ysocks.gitee.io/2023/12/12/FeignClient-RequestParam-value-was-empty/"/>
-    <id>http://ysocks.gitee.io/2023/12/12/FeignClient-RequestParam-value-was-empty/</id>
+    <link href="http://ysocket-blog.pages.dev/2023/12/12/FeignClient-RequestParam-value-was-empty/"/>
+    <id>http://ysocket-blog.pages.dev/2023/12/12/FeignClient-RequestParam-value-was-empty/</id>
     <published>2023-12-12T08:13:00.000Z</published>
     <updated>2024-01-30T13:22:47.023Z</updated>
     
@@ -57,19 +57,19 @@
     
     
     
-    <category term="feign" scheme="http://ysocks.gitee.io/categories/feign/"/>
+    <category term="feign" scheme="http://ysocket-blog.pages.dev/categories/feign/"/>
     
     
-    <category term="spring cloud" scheme="http://ysocks.gitee.io/tags/spring-cloud/"/>
+    <category term="spring cloud" scheme="http://ysocket-blog.pages.dev/tags/spring-cloud/"/>
     
-    <category term="feign" scheme="http://ysocks.gitee.io/tags/feign/"/>
+    <category term="feign" scheme="http://ysocket-blog.pages.dev/tags/feign/"/>
     
   </entry>
   
   <entry>
     <title>关于A method overriding another method must not redefine the parameter constraint configuration解决方法</title>
-    <link href="http://ysocks.gitee.io/2023/11/11/A-method-overriding-another-method-must-not-redefine-the-parameter-constraint-configuration/"/>
-    <id>http://ysocks.gitee.io/2023/11/11/A-method-overriding-another-method-must-not-redefine-the-parameter-constraint-configuration/</id>
+    <link href="http://ysocket-blog.pages.dev/2023/11/11/A-method-overriding-another-method-must-not-redefine-the-parameter-constraint-configuration/"/>
+    <id>http://ysocket-blog.pages.dev/2023/11/11/A-method-overriding-another-method-must-not-redefine-the-parameter-constraint-configuration/</id>
     <published>2023-11-11T07:53:00.000Z</published>
     <updated>2024-01-30T13:22:47.022Z</updated>
     
@@ -83,17 +83,17 @@
     
     
     
-    <category term="spring cloud" scheme="http://ysocks.gitee.io/categories/spring-cloud/"/>
+    <category term="spring cloud" scheme="http://ysocket-blog.pages.dev/categories/spring-cloud/"/>
     
     
-    <category term="spring cloud" scheme="http://ysocks.gitee.io/tags/spring-cloud/"/>
+    <category term="spring cloud" scheme="http://ysocket-blog.pages.dev/tags/spring-cloud/"/>
     
   </entry>
   
   <entry>
     <title> Spring Boot 整合 RabbitMQ</title>
-    <link href="http://ysocks.gitee.io/2023/09/13/springboot-rabbitmq-01/"/>
-    <id>http://ysocks.gitee.io/2023/09/13/springboot-rabbitmq-01/</id>
+    <link href="http://ysocket-blog.pages.dev/2023/09/13/springboot-rabbitmq-01/"/>
+    <id>http://ysocket-blog.pages.dev/2023/09/13/springboot-rabbitmq-01/</id>
     <published>2023-09-13T08:19:00.000Z</published>
     <updated>2023-10-05T14:33:05.723Z</updated>
     
@@ -107,17 +107,17 @@
     
     
     
-    <category term="springboot rabbitmq" scheme="http://ysocks.gitee.io/categories/springboot-rabbitmq/"/>
+    <category term="springboot rabbitmq" scheme="http://ysocket-blog.pages.dev/categories/springboot-rabbitmq/"/>
     
     
-    <category term="rabbitmq" scheme="http://ysocks.gitee.io/tags/rabbitmq/"/>
+    <category term="rabbitmq" scheme="http://ysocket-blog.pages.dev/tags/rabbitmq/"/>
     
   </entry>
   
   <entry>
     <title>理解 RabbitMQ Exchange</title>
-    <link href="http://ysocks.gitee.io/2023/09/12/know-rabbitmq-exchange/"/>
-    <id>http://ysocks.gitee.io/2023/09/12/know-rabbitmq-exchange/</id>
+    <link href="http://ysocket-blog.pages.dev/2023/09/12/know-rabbitmq-exchange/"/>
+    <id>http://ysocket-blog.pages.dev/2023/09/12/know-rabbitmq-exchange/</id>
     <published>2023-09-12T09:28:37.000Z</published>
     <updated>2023-10-05T14:33:05.722Z</updated>
     
@@ -136,8 +136,8 @@
   
   <entry>
     <title>spring cloud config本地配置覆盖远程配置属性</title>
-    <link href="http://ysocks.gitee.io/2023/09/12/spring-config-override/"/>
-    <id>http://ysocks.gitee.io/2023/09/12/spring-config-override/</id>
+    <link href="http://ysocket-blog.pages.dev/2023/09/12/spring-config-override/"/>
+    <id>http://ysocket-blog.pages.dev/2023/09/12/spring-config-override/</id>
     <published>2023-09-12T07:42:00.000Z</published>
     <updated>2023-10-16T12:42:14.297Z</updated>
     
@@ -151,17 +151,17 @@
     
     
     
-    <category term="spring cloud config" scheme="http://ysocks.gitee.io/categories/spring-cloud-config/"/>
+    <category term="spring cloud config" scheme="http://ysocket-blog.pages.dev/categories/spring-cloud-config/"/>
     
     
-    <category term="spring cloud" scheme="http://ysocks.gitee.io/tags/spring-cloud/"/>
+    <category term="spring cloud" scheme="http://ysocket-blog.pages.dev/tags/spring-cloud/"/>
     
   </entry>
   
   <entry>
     <title>Spring Boot中@ConditionalOnProperty使用详解</title>
-    <link href="http://ysocks.gitee.io/2023/09/09/springboot-ConditionalOnProperty-detail/"/>
-    <id>http://ysocks.gitee.io/2023/09/09/springboot-ConditionalOnProperty-detail/</id>
+    <link href="http://ysocket-blog.pages.dev/2023/09/09/springboot-ConditionalOnProperty-detail/"/>
+    <id>http://ysocket-blog.pages.dev/2023/09/09/springboot-ConditionalOnProperty-detail/</id>
     <published>2023-09-09T02:02:00.000Z</published>
     <updated>2023-09-19T11:27:40.871Z</updated>
     
@@ -176,17 +176,17 @@
     
     
     
-    <category term="spring boot" scheme="http://ysocks.gitee.io/categories/spring-boot/"/>
+    <category term="spring boot" scheme="http://ysocket-blog.pages.dev/categories/spring-boot/"/>
     
     
-    <category term="spring boot" scheme="http://ysocks.gitee.io/tags/spring-boot/"/>
+    <category term="spring boot" scheme="http://ysocket-blog.pages.dev/tags/spring-boot/"/>
     
   </entry>
   
   <entry>
     <title>MyBatis-Plus updateById 不更新null字段</title>
-    <link href="http://ysocks.gitee.io/2023/09/02/mybatis-plus-null-field-not-be-update/"/>
-    <id>http://ysocks.gitee.io/2023/09/02/mybatis-plus-null-field-not-be-update/</id>
+    <link href="http://ysocket-blog.pages.dev/2023/09/02/mybatis-plus-null-field-not-be-update/"/>
+    <id>http://ysocket-blog.pages.dev/2023/09/02/mybatis-plus-null-field-not-be-update/</id>
     <published>2023-09-02T07:22:00.000Z</published>
     <updated>2023-09-19T11:27:40.870Z</updated>
     
@@ -201,17 +201,17 @@
     
     
     
-    <category term="mybatis" scheme="http://ysocks.gitee.io/categories/mybatis/"/>
+    <category term="mybatis" scheme="http://ysocket-blog.pages.dev/categories/mybatis/"/>
     
     
-    <category term="mybatis" scheme="http://ysocks.gitee.io/tags/mybatis/"/>
+    <category term="mybatis" scheme="http://ysocket-blog.pages.dev/tags/mybatis/"/>
     
   </entry>
   
   <entry>
     <title>springboot核心基础之spring.factories机制</title>
-    <link href="http://ysocks.gitee.io/2023/08/23/spring-factories/"/>
-    <id>http://ysocks.gitee.io/2023/08/23/spring-factories/</id>
+    <link href="http://ysocket-blog.pages.dev/2023/08/23/spring-factories/"/>
+    <id>http://ysocket-blog.pages.dev/2023/08/23/spring-factories/</id>
     <published>2023-08-23T02:33:33.000Z</published>
     <updated>2023-08-24T13:16:16.643Z</updated>
     
@@ -230,8 +230,8 @@
   
   <entry>
     <title>idea使用技巧之检查未使用的类、变量、方法</title>
-    <link href="http://ysocks.gitee.io/2023/08/04/find-unused-by-idea/"/>
-    <id>http://ysocks.gitee.io/2023/08/04/find-unused-by-idea/</id>
+    <link href="http://ysocket-blog.pages.dev/2023/08/04/find-unused-by-idea/"/>
+    <id>http://ysocket-blog.pages.dev/2023/08/04/find-unused-by-idea/</id>
     <published>2023-08-04T02:47:38.000Z</published>
     <updated>2023-08-24T13:16:16.642Z</updated>
     
@@ -252,8 +252,8 @@
   
   <entry>
     <title>无需额外注解的 SpringBoot API文档生成工具</title>
-    <link href="http://ysocks.gitee.io/2023/07/31/JApiDocs/"/>
-    <id>http://ysocks.gitee.io/2023/07/31/JApiDocs/</id>
+    <link href="http://ysocket-blog.pages.dev/2023/07/31/JApiDocs/"/>
+    <id>http://ysocket-blog.pages.dev/2023/07/31/JApiDocs/</id>
     <published>2023-07-31T00:35:23.000Z</published>
     <updated>2023-08-02T14:21:53.774Z</updated>
     
@@ -272,8 +272,8 @@
   
   <entry>
     <title>OpenAPI 文档 (Swagger)</title>
-    <link href="http://ysocks.gitee.io/2023/07/26/OpenApi-swaager/"/>
-    <id>http://ysocks.gitee.io/2023/07/26/OpenApi-swaager/</id>
+    <link href="http://ysocket-blog.pages.dev/2023/07/26/OpenApi-swaager/"/>
+    <id>http://ysocket-blog.pages.dev/2023/07/26/OpenApi-swaager/</id>
     <published>2023-07-26T07:30:07.000Z</published>
     <updated>2023-08-02T14:21:53.774Z</updated>
     
@@ -293,8 +293,8 @@
   
   <entry>
     <title>新版Maven，构建速度大幅提升</title>
-    <link href="http://ysocks.gitee.io/2023/07/22/mvnd/"/>
-    <id>http://ysocks.gitee.io/2023/07/22/mvnd/</id>
+    <link href="http://ysocket-blog.pages.dev/2023/07/22/mvnd/"/>
+    <id>http://ysocket-blog.pages.dev/2023/07/22/mvnd/</id>
     <published>2023-07-22T01:27:00.000Z</published>
     <updated>2023-07-23T13:41:14.220Z</updated>
     
@@ -309,14 +309,14 @@
     
     
     
-    <category term="JAVA" scheme="http://ysocks.gitee.io/tags/JAVA/"/>
+    <category term="JAVA" scheme="http://ysocket-blog.pages.dev/tags/JAVA/"/>
     
   </entry>
   
   <entry>
     <title>SpringAOP底层原理</title>
-    <link href="http://ysocks.gitee.io/2022/12/14/spring-aop-01/"/>
-    <id>http://ysocks.gitee.io/2022/12/14/spring-aop-01/</id>
+    <link href="http://ysocket-blog.pages.dev/2022/12/14/spring-aop-01/"/>
+    <id>http://ysocket-blog.pages.dev/2022/12/14/spring-aop-01/</id>
     <published>2022-12-14T06:04:00.000Z</published>
     <updated>2023-07-16T00:39:56.536Z</updated>
     
@@ -331,21 +331,21 @@
     
     
     
-    <category term="Java" scheme="http://ysocks.gitee.io/categories/Java/"/>
+    <category term="Java" scheme="http://ysocket-blog.pages.dev/categories/Java/"/>
     
-    <category term="Spring" scheme="http://ysocks.gitee.io/categories/Java/Spring/"/>
+    <category term="Spring" scheme="http://ysocket-blog.pages.dev/categories/Java/Spring/"/>
     
     
-    <category term="Spring" scheme="http://ysocks.gitee.io/tags/Spring/"/>
+    <category term="Spring" scheme="http://ysocket-blog.pages.dev/tags/Spring/"/>
     
-    <category term="Java" scheme="http://ysocks.gitee.io/tags/Java/"/>
+    <category term="Java" scheme="http://ysocket-blog.pages.dev/tags/Java/"/>
     
   </entry>
   
   <entry>
     <title>4 个 yyds 的 IDEA 高级调试技巧</title>
-    <link href="http://ysocks.gitee.io/2022/03/26/idea-debug-4-skills/"/>
-    <id>http://ysocks.gitee.io/2022/03/26/idea-debug-4-skills/</id>
+    <link href="http://ysocket-blog.pages.dev/2022/03/26/idea-debug-4-skills/"/>
+    <id>http://ysocket-blog.pages.dev/2022/03/26/idea-debug-4-skills/</id>
     <published>2022-03-26T08:26:00.000Z</published>
     <updated>2022-05-07T13:12:11.969Z</updated>
     
@@ -359,19 +359,19 @@
     
     
     
-    <category term="java" scheme="http://ysocks.gitee.io/categories/java/"/>
+    <category term="java" scheme="http://ysocket-blog.pages.dev/categories/java/"/>
     
     
-    <category term="java" scheme="http://ysocks.gitee.io/tags/java/"/>
+    <category term="java" scheme="http://ysocket-blog.pages.dev/tags/java/"/>
     
-    <category term="debug" scheme="http://ysocks.gitee.io/tags/debug/"/>
+    <category term="debug" scheme="http://ysocket-blog.pages.dev/tags/debug/"/>
     
   </entry>
   
   <entry>
     <title>JAVA通过oshi获取系统和硬件信息</title>
-    <link href="http://ysocks.gitee.io/2022/03/18/oshi-sample/"/>
-    <id>http://ysocks.gitee.io/2022/03/18/oshi-sample/</id>
+    <link href="http://ysocket-blog.pages.dev/2022/03/18/oshi-sample/"/>
+    <id>http://ysocket-blog.pages.dev/2022/03/18/oshi-sample/</id>
     <published>2022-03-18T07:27:00.000Z</published>
     <updated>2022-03-19T14:11:39.786Z</updated>
     
@@ -383,16 +383,16 @@
     
     
     
-    <category term="java" scheme="http://ysocks.gitee.io/tags/java/"/>
+    <category term="java" scheme="http://ysocket-blog.pages.dev/tags/java/"/>
     
-    <category term="oshi" scheme="http://ysocks.gitee.io/tags/oshi/"/>
+    <category term="oshi" scheme="http://ysocket-blog.pages.dev/tags/oshi/"/>
     
   </entry>
   
   <entry>
     <title>Cache-Aside pattern</title>
-    <link href="http://ysocks.gitee.io/2022/03/12/Cache-Aside-pattern/"/>
-    <id>http://ysocks.gitee.io/2022/03/12/Cache-Aside-pattern/</id>
+    <link href="http://ysocket-blog.pages.dev/2022/03/12/Cache-Aside-pattern/"/>
+    <id>http://ysocket-blog.pages.dev/2022/03/12/Cache-Aside-pattern/</id>
     <published>2022-03-12T07:20:29.000Z</published>
     <updated>2022-03-19T14:11:39.785Z</updated>
     
@@ -413,8 +413,8 @@
   
   <entry>
     <title>安装docker</title>
-    <link href="http://ysocks.gitee.io/2022/02/19/install-docker-on-linux/"/>
-    <id>http://ysocks.gitee.io/2022/02/19/install-docker-on-linux/</id>
+    <link href="http://ysocket-blog.pages.dev/2022/02/19/install-docker-on-linux/"/>
+    <id>http://ysocket-blog.pages.dev/2022/02/19/install-docker-on-linux/</id>
     <published>2022-02-19T06:59:00.000Z</published>
     <updated>2022-03-19T14:11:39.786Z</updated>
     
@@ -427,14 +427,14 @@
     
     
     
-    <category term="docker" scheme="http://ysocks.gitee.io/tags/docker/"/>
+    <category term="docker" scheme="http://ysocket-blog.pages.dev/tags/docker/"/>
     
   </entry>
   
   <entry>
     <title>mac下hostadmin修改host文件提示权限不足的问题</title>
-    <link href="http://ysocks.gitee.io/2022/02/09/mac-editor-etc-hosts/"/>
-    <id>http://ysocks.gitee.io/2022/02/09/mac-editor-etc-hosts/</id>
+    <link href="http://ysocket-blog.pages.dev/2022/02/09/mac-editor-etc-hosts/"/>
+    <id>http://ysocket-blog.pages.dev/2022/02/09/mac-editor-etc-hosts/</id>
     <published>2022-02-09T08:59:00.000Z</published>
     <updated>2022-03-19T14:11:39.786Z</updated>
     
@@ -449,17 +449,17 @@
     
     
     
-    <category term="Mac" scheme="http://ysocks.gitee.io/categories/Mac/"/>
+    <category term="Mac" scheme="http://ysocket-blog.pages.dev/categories/Mac/"/>
     
     
-    <category term="Mac" scheme="http://ysocks.gitee.io/tags/Mac/"/>
+    <category term="Mac" scheme="http://ysocket-blog.pages.dev/tags/Mac/"/>
     
   </entry>
   
   <entry>
     <title>提高 GitHub 下载速度的方案</title>
-    <link href="http://ysocks.gitee.io/2022/02/08/download-file-from-github/"/>
-    <id>http://ysocks.gitee.io/2022/02/08/download-file-from-github/</id>
+    <link href="http://ysocket-blog.pages.dev/2022/02/08/download-file-from-github/"/>
+    <id>http://ysocket-blog.pages.dev/2022/02/08/download-file-from-github/</id>
     <published>2022-02-08T07:54:00.000Z</published>
     <updated>2022-02-13T06:51:47.767Z</updated>
     
@@ -474,10 +474,10 @@
     
     
     
-    <category term="github" scheme="http://ysocks.gitee.io/categories/github/"/>
+    <category term="github" scheme="http://ysocket-blog.pages.dev/categories/github/"/>
     
     
-    <category term="github" scheme="http://ysocks.gitee.io/tags/github/"/>
+    <category term="github" scheme="http://ysocket-blog.pages.dev/tags/github/"/>
     
   </entry>
   

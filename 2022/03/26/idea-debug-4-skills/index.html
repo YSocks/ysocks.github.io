@@ -15,25 +15,25 @@
     <meta name="description" content="今天给大家带来几个我日常工作以及阅读源码必备的 IntelliJ IDEA 高级调试技巧，分分钟要起飞的节奏 断点处添加 log很多程序员在调试代码时都喜欢 print 一些内容，这样看起来更直观，print 完之后又很容易忘记删除掉这些没用的内容，最终将代码提交到 remote，code review 时又不得不删减这些内容重新提交，不但增加不必要的工作量，还让 log tree 的一些节点没有">
 <meta property="og:type" content="article">
 <meta property="og:title" content="4 个 yyds 的 IDEA 高级调试技巧">
-<meta property="og:url" content="http://ysocks.gitee.io/2022/03/26/idea-debug-4-skills/index.html">
+<meta property="og:url" content="http://ysocket-blog.pages.dev/2022/03/26/idea-debug-4-skills/index.html">
 <meta property="og:site_name" content="YSocket's Blog">
 <meta property="og:description" content="今天给大家带来几个我日常工作以及阅读源码必备的 IntelliJ IDEA 高级调试技巧，分分钟要起飞的节奏 断点处添加 log很多程序员在调试代码时都喜欢 print 一些内容，这样看起来更直观，print 完之后又很容易忘记删除掉这些没用的内容，最终将代码提交到 remote，code review 时又不得不删减这些内容重新提交，不但增加不必要的工作量，还让 log tree 的一些节点没有">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://ysocks.gitee.io/images/pasted-5.png">
-<meta property="og:image" content="http://ysocks.gitee.io/images/pasted-6.png">
-<meta property="og:image" content="http://ysocks.gitee.io/images/pasted-7.png">
-<meta property="og:image" content="http://ysocks.gitee.io/images/pasted-8.png">
-<meta property="og:image" content="http://ysocks.gitee.io/images/pasted-9.png">
-<meta property="og:image" content="http://ysocks.gitee.io/images/pasted-10.png">
-<meta property="og:image" content="http://ysocks.gitee.io/images/pasted-11.png">
-<meta property="og:image" content="http://ysocks.gitee.io/images/pasted-12.png">
+<meta property="og:image" content="http://ysocket-blog.pages.dev/images/pasted-5.png">
+<meta property="og:image" content="http://ysocket-blog.pages.dev/images/pasted-6.png">
+<meta property="og:image" content="http://ysocket-blog.pages.dev/images/pasted-7.png">
+<meta property="og:image" content="http://ysocket-blog.pages.dev/images/pasted-8.png">
+<meta property="og:image" content="http://ysocket-blog.pages.dev/images/pasted-9.png">
+<meta property="og:image" content="http://ysocket-blog.pages.dev/images/pasted-10.png">
+<meta property="og:image" content="http://ysocket-blog.pages.dev/images/pasted-11.png">
+<meta property="og:image" content="http://ysocket-blog.pages.dev/images/pasted-12.png">
 <meta property="article:published_time" content="2022-03-26T08:26:00.000Z">
 <meta property="article:modified_time" content="2022-05-07T13:12:11.969Z">
 <meta property="article:author" content="YSocket">
 <meta property="article:tag" content="java">
 <meta property="article:tag" content="debug">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="http://ysocks.gitee.io/images/pasted-5.png">
+<meta name="twitter:image" content="http://ysocket-blog.pages.dev/images/pasted-5.png">
   
   
   
@@ -75,7 +75,7 @@
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
     Fluid.ctx = Object.assign({}, Fluid.ctx)
-    var CONFIG = {"hostname":"ysocks.gitee.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null},"gtag":null,"woyaola":null,"cnzz":null},"search_path":"/local-search.xml","include_content_in_search":true};
+    var CONFIG = {"hostname":"ysocket-blog.pages.dev","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null},"gtag":null,"woyaola":null,"cnzz":null},"search_path":"/local-search.xml","include_content_in_search":true};
 
     if (CONFIG.web_analytics.follow_dnt) {
       var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
@@ -394,7 +394,7 @@ Process finished with exit code
   <div class="license-box my-3">
     <div class="license-title">
       <div>4 个 yyds 的 IDEA 高级调试技巧<hanla></hanla></div>
-      <div>http://ysocks.gitee.io/2022/03/26/idea-debug-4-skills/</div>
+      <div>http://ysocket-blog.pages.dev/2022/03/26/idea-debug-4-skills/</div>
     </div>
     <div class="license-meta">
       

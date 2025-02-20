@@ -15,7 +15,7 @@
     <meta name="description" content="异步对于一些比较耗时的操作.可以将他们 以 异步的方式实现. 完成后在通知调用者。 &nbsp;Spring实现的异步方法：  AsyncRestTemplate @Async注解 WebClient(spring 5.0引入）除了这三种.还有一种基于MQ消息队列的方式实现异步。使用消息队列 可以在service层异步 也可以在controller层异步。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="spring中实现异步的四种方式">
-<meta property="og:url" content="http://ysocks.gitee.io/2020/11/25/async-handle-method-in-spring/index.html">
+<meta property="og:url" content="http://ysocket-blog.pages.dev/2020/11/25/async-handle-method-in-spring/index.html">
 <meta property="og:site_name" content="YSocket's Blog">
 <meta property="og:description" content="异步对于一些比较耗时的操作.可以将他们 以 异步的方式实现. 完成后在通知调用者。 &nbsp;Spring实现的异步方法：  AsyncRestTemplate @Async注解 WebClient(spring 5.0引入）除了这三种.还有一种基于MQ消息队列的方式实现异步。使用消息队列 可以在service层异步 也可以在controller层异步。">
 <meta property="og:locale" content="zh_CN">
@@ -65,7 +65,7 @@
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
     Fluid.ctx = Object.assign({}, Fluid.ctx)
-    var CONFIG = {"hostname":"ysocks.gitee.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null},"gtag":null,"woyaola":null,"cnzz":null},"search_path":"/local-search.xml","include_content_in_search":true};
+    var CONFIG = {"hostname":"ysocket-blog.pages.dev","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null},"gtag":null,"woyaola":null,"cnzz":null},"search_path":"/local-search.xml","include_content_in_search":true};
 
     if (CONFIG.web_analytics.follow_dnt) {
       var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
@@ -319,7 +319,7 @@ html ul > hanla {
   <div class="license-box my-3">
     <div class="license-title">
       <div>spring<hanla></hanla>中实现异步的四种方式<hanla></hanla></div>
-      <div>http://ysocks.gitee.io/2020/11/25/async-handle-method-in-spring/</div>
+      <div>http://ysocket-blog.pages.dev/2020/11/25/async-handle-method-in-spring/</div>
     </div>
     <div class="license-meta">
       
